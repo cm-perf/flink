@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Flame Link — BMW flame kit controller by CM Performance</title>
+<meta name="description" content="Flame Link is a BMW flame kit controller. Tune flame stages from the app, or let it auto-fire off your car's CAN bus on every lift-off. By CM Performance." />
+
+<!-- Fill in before publishing: WhatsApp number (3 links) and price (one line). Search "EDIT". -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    --bg: #000000;
+    --surface: #0c0c0c;
+    --elevated: #161616;
+    --text: #ffffff;
+    --dim: #888888;
+    --muted: #3d3d3d;
+    --border: #1c1c1c;
+    --border-hi: #2e2e2e;
+    --flame: #e85d04;
+    --bmw: #1c69d4;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif; line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: 940px; margin: 0 auto; padding: 0 20px; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  /* Animated flame "starlight" — drifting embers behind everything */
+  #embers { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+  section, footer { position: relative; z-index: 1; }
+  .flame { color: var(--flame); }
+  .dim { color: var(--dim); }
+
+  /* tiny shared label, like the app */
+  .label {
+    font-size: 9px; font-weight: 600; letter-spacing: 2.5px;
+    text-transform: uppercase; color: var(--dim);
+  }
+  .tag {
+    display: inline-block; font-size: 9px; font-weight: 600; letter-spacing: 2.5px;
+    text-transform: uppercase; color: var(--dim);
+    border: 1px solid var(--border); border-radius: 3px; padding: 5px 9px;
+  }
+
+  /* buttons */
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 700; letter-spacing: .2px;
+    padding: 10px 18px; border-radius: 4px; border: 1px solid transparent;
+    cursor: pointer; transition: opacity .15s, background .15s, border-color .15s;
+  }
+  .btn-flame { background: var(--flame); color: #000; }
+  .btn-flame:hover { opacity: .9; }
+  .btn-line { background: transparent; color: var(--text); border-color: var(--border-hi); }
+  .btn-line:hover { background: var(--elevated); }
+
+  /* hero */
+  .hero { position: relative; overflow: hidden; min-height: 100vh; display: flex; align-items: center; padding: 48px 0 64px; }
+  .hero::before {
+    content: ''; position: absolute; z-index: -1; pointer-events: none;
+    right: 0; top: 50%; transform: translateY(-50%);
+    width: 760px; height: 760px; max-width: 92vw;
+    background: radial-gradient(circle, rgba(232,93,4,.18), transparent 60%);
+  }
+  .hrow { display: flex; align-items: center; gap: 32px; width: 100%; }
+  .hero-copy { flex: 1; min-width: 0; }
+  .hero .eyebrow {
+    display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: 4px;
+    text-transform: uppercase; color: var(--flame); margin-bottom: 22px;
+  }
+  .hero h1 { font-size: clamp(40px, 6.6vw, 72px); font-weight: 800; letter-spacing: -.04em; line-height: 1.0; }
+  .hero p { color: var(--dim); font-size: clamp(15px, 1.7vw, 17px); line-height: 1.7; max-width: 440px; margin: 26px 0 34px; }
+  .hero .ctas { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 30px; }
+  .hero-visual { flex-shrink: 0; width: clamp(230px, 32vw, 350px); display: flex; justify-content: center; }
+  .hero-visual svg { width: 100%; height: auto; }
+  @keyframes flicker {
+    0%, 100% { transform: scaleX(1) scaleY(1) translateY(0); }
+    25% { transform: scaleX(.97) scaleY(1.02) translateY(-5px); }
+    50% { transform: scaleX(1.02) scaleY(.99) translateY(-2px); }
+    75% { transform: scaleX(.98) scaleY(1.01) translateY(-7px); }
+  }
+  .flame-svg { animation: flicker 5s ease-in-out infinite; transform-origin: 50% 88%; }
+  @media (max-width: 860px) {
+    .hero { min-height: 0; padding: 56px 0 64px; text-align: center; }
+    .hrow { flex-direction: column-reverse; gap: 8px; }
+    .hero p { margin-left: auto; margin-right: auto; }
+    .hero .ctas { justify-content: center; }
+    .hero-visual { width: 210px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .flame-svg { animation: none; } }
+
+  /* sections */
+  section { padding: 64px 0; border-top: 1px solid var(--border); }
+  .sec-label { text-align: center; margin-bottom: 40px; }
+  .sec-label h2 { font-size: clamp(24px, 4vw, 34px); font-weight: 800; letter-spacing: -.02em; margin-top: 10px; }
+
+  /* features — three honest blocks */
+  .feats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .feat { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 26px 22px; }
+  .feat .ico { width: 34px; height: 34px; margin-bottom: 16px; }
+  .feat .ico svg { width: 34px; height: 34px; stroke: var(--flame); fill: none; stroke-width: 1.6; }
+  .feat h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+  .feat p { font-size: 13px; color: var(--dim); line-height: 1.55; }
+
+  /* specs — plain rows, mono values */
+  .specs { max-width: 620px; margin: 0 auto; }
+  .row { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--border); }
+  .row .k { font-size: 13px; color: var(--dim); }
+  .row .v { font-size: 13px; font-weight: 600; text-align: right; }
+
+  /* order */
+  .order-card {
+    max-width: 440px; margin: 0 auto; text-align: center; position: relative; overflow: hidden;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 38px 36px;
+  }
+  .order-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, transparent, var(--flame), transparent);
+  }
+  .order-card .price { font-size: 48px; font-weight: 800; letter-spacing: -.02em; margin-top: 16px; }
+  .order-card .price small { font-size: 17px; color: var(--dim); font-weight: 600; }
+  .order-card .incl { list-style: none; text-align: left; margin: 26px 0 28px; display: grid; gap: 12px; }
+  .order-card .incl li { font-size: 13px; color: var(--text); display: flex; gap: 10px; align-items: flex-start; }
+  .order-card .incl li::before { content: '✓'; color: var(--flame); font-weight: 700; flex-shrink: 0; }
+  .order-card .price small { display: block; font-size: 11px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase; color: var(--dim); margin-bottom: 4px; }
+  .order-card .btn { width: 100%; justify-content: center; padding: 14px; font-size: 14px; }
+  .order-card .btn + .btn { margin-top: 10px; }
+  .order-card .note { font-size: 11px; color: var(--muted); margin-top: 16px; }
+
+  .addon {
+    max-width: 440px; margin: 14px auto 0; display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; text-align: left;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px;
+  }
+  .addon .a-name { font-size: 13px; font-weight: 600; }
+  .addon .a-sub { display: block; font-size: 11px; color: var(--dim); margin-top: 2px; }
+  .addon .a-price { font-size: 15px; font-weight: 700; white-space: nowrap; font-family: 'JetBrains Mono', monospace; }
+
+  /* footer */
+  footer { border-top: 1px solid var(--border); padding: 40px 0 44px; }
+  .foot-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+  .links { display: flex; gap: 20px; flex-wrap: wrap; }
+  .links a { color: var(--dim); font-size: 13px; }
+  .links a:hover { color: var(--flame); }
+  .totop { color: var(--dim); font-size: 12px; letter-spacing: .5px; white-space: nowrap; }
+  .totop:hover { color: var(--flame); }
+  .disclaimer { color: var(--muted); font-size: 11px; line-height: 1.5; margin-top: 26px; max-width: 560px; }
+  .copy { color: var(--muted); font-size: 11px; margin-top: 14px; }
+
+  @media (max-width: 720px) {
+    .feats { grid-template-columns: 1fr; }
+    section { padding: 52px 0; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="embers"></canvas>
+
+<!-- Reusable logo: bolt inside a BMW-blue ring, flame-gradient bolt (matches the app) -->
+<svg width="0" height="0" style="position:absolute"><defs>
+  <linearGradient id="bolt" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#1c69d4"/>
+    <stop offset="0.28" stop-color="#9bb8f0"/>
+    <stop offset="0.50" stop-color="#ffb340"/>
+    <stop offset="0.75" stop-color="#e85d04"/>
+    <stop offset="1" stop-color="#c03030"/>
+  </linearGradient>
+</defs></svg>
+
+<a id="top"></a>
+
+<section class="hero" style="border-top:0">
+  <div class="wrap">
+    <div class="hrow">
+      <div class="hero-copy">
+        <span class="eyebrow">BMW Flame Kit</span>
+        <h1>Every downshift,<br><span class="flame">a burst of flame.</span></h1>
+        <p>The BMW flame kit that fires itself. Lift off the throttle and it lights — automatically, every single time. Then tune it your way from the app.</p>
+        <div class="ctas">
+          <a class="btn btn-flame" href="#order">Get Flame Link</a>
+          <a class="btn btn-line" href="#how">How it works</a>
+        </div>
+        <span class="tag">Off-road use only</span>
+      </div>
+
+      <div class="hero-visual">
+        <svg class="flame-svg" viewBox="0 0 300 500" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="150" cy="280" r="195" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+          <circle cx="150" cy="280" r="148" stroke="rgba(255,255,255,0.025)" stroke-width="1"/>
+          <path d="M150 470 C84 432 40 364 52 278 C62 204 106 232 120 172 C128 140 120 96 132 60 C138 40 146 20 152 8 C157 22 162 44 160 68 C157 96 148 116 156 138 C164 160 186 142 198 168 C214 200 220 250 214 296 C206 348 188 406 150 470Z" fill="url(#g_outer)" opacity="0.24"/>
+          <path d="M150 452 C104 412 76 348 88 272 C98 208 134 232 144 184 C150 156 144 120 152 90 C155 104 158 122 156 144 C154 166 148 182 155 202 C162 222 182 206 188 228 C198 262 200 308 192 346 C182 388 166 424 150 452Z" fill="url(#g_mid)" opacity="0.65"/>
+          <path d="M150 428 C120 388 110 340 120 288 C128 248 150 266 156 232 C160 250 164 268 162 288 C160 308 154 322 160 340 C166 358 180 346 182 366 C184 388 172 412 150 428Z" fill="url(#g_inner)" opacity="0.92"/>
+          <path d="M150 400 C134 370 130 332 140 298 C146 276 155 288 157 268 C161 284 163 302 161 320 C159 338 153 350 157 364 C161 376 169 368 169 382 C169 396 158 408 150 400Z" fill="#fff" opacity="0.6"/>
+          <ellipse cx="150" cy="458" rx="92" ry="20" fill="#e85d04" opacity="0.12"/>
+          <ellipse cx="150" cy="462" rx="56" ry="12" fill="#ffaa00" opacity="0.1"/>
+          <defs>
+            <linearGradient id="g_outer" x1="150" y1="8" x2="150" y2="470" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#ff9500"/><stop offset="55%" stop-color="#e85d04"/><stop offset="100%" stop-color="#c0392b" stop-opacity="0"/>
+            </linearGradient>
+            <linearGradient id="g_mid" x1="150" y1="90" x2="150" y2="452" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#ffdd00"/><stop offset="45%" stop-color="#ff7700"/><stop offset="100%" stop-color="#e85d04" stop-opacity="0.1"/>
+            </linearGradient>
+            <linearGradient id="g_inner" x1="150" y1="232" x2="150" y2="428" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#fffbe0"/><stop offset="35%" stop-color="#ffcc44"/><stop offset="100%" stop-color="#ff5500" stop-opacity="0.25"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="sec-label">
+      <span class="label">What it does</span>
+      <h2>Three things, done right.</h2>
+    </div>
+    <div class="feats">
+      <div class="feat">
+        <div class="ico"><svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/></svg></div>
+        <h3>Tune from your phone</h3>
+        <p>Set flame length, intensity and crackle in the app over Bluetooth. Save tunes, switch them on the fly.</p>
+      </div>
+      <div class="feat">
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg></div>
+        <h3>Fires on every downshift</h3>
+        <p>Lift off the throttle and it lights on its own — automatic, instant, no phone and no buttons to press.</p>
+      </div>
+      <div class="feat">
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <h3>Safe by design</h3>
+        <p>Hard burn-time limits, a hardware watchdog and fused power. It shuts itself off if anything goes wrong.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="specs">
+  <div class="wrap specs">
+    <div class="sec-label">
+      <span class="label">Specs</span>
+      <h2>The details.</h2>
+    </div>
+    <div class="row"><span class="k">Fits</span><span class="v mono">BMW</span></div>
+    <div class="row"><span class="k">Auto-fire</span><span class="v mono">Every downshift</span></div>
+    <div class="row"><span class="k">Control</span><span class="v mono">App · wireless</span></div>
+    <div class="row"><span class="k">Flame stages</span><span class="v mono">Multiple · tunable</span></div>
+    <div class="row"><span class="k">Power</span><span class="v mono">12V · fused</span></div>
+    <div class="row"><span class="k">App</span><span class="v mono">Android · iOS</span></div>
+    <div class="row"><span class="k">Use</span><span class="v mono">Off-road only</span></div>
+  </div>
+</section>
+
+<section id="order">
+  <div class="wrap">
+    <div class="sec-label">
+      <span class="label">Get yours</span>
+      <h2>One kit. Everything in it.</h2>
+    </div>
+    <div class="order-card">
+      <span class="label">Complete kit</span>
+      <div class="price"><small>Starts at</small>GH₵ 8,000</div>
+      <ul class="incl">
+        <li>Controller and wiring harness</li>
+        <li>The app — tune every flame stage</li>
+        <li>Step-by-step install guide and support</li>
+        <li>Delivery across Ghana</li>
+      </ul>
+      <!-- EDIT: paste your Paystack Payment Page link between the quotes below -->
+      <a class="btn btn-flame" href="PASTE_PAYSTACK_LINK_HERE" target="_blank" rel="noopener">Pay deposit to reserve</a>
+      <a class="btn btn-line" href="https://wa.me/233206287456?text=Hi%20CM%20Performance%2C%20I%27m%20interested%20in%20the%20Flame%20Kit" target="_blank" rel="noopener">Or message us first</a>
+      <p class="note">Deposit secures your build · balance due on fitting</p>
+    </div>
+
+    <div class="addon">
+      <div>
+        <span class="a-name">Professional installation</span>
+        <span class="a-sub">Fitted by our team — optional</span>
+      </div>
+      <span class="a-price">GH₵ 2,000</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-row">
+      <div class="links">
+        <a href="#how">What it does</a>
+        <a href="#specs">Specs</a>
+        <a href="#order">Order</a>
+        <!-- EDIT: WhatsApp number -->
+        <a href="https://wa.me/233206287456" target="_blank" rel="noopener">WhatsApp</a>
+        <a href="mailto:cmperformancegh@gmail.com">Email</a>
+      </div>
+      <a class="totop" href="#top">Back to top ↑</a>
+    </div>
+    <p class="disclaimer">For off-road and show use only. A flame kit may be illegal on public roads where you live — check your local laws. Operate away from people, fuel and structures.</p>
+    <p class="copy mono">© <span id="yr"></span> CM Performance · Made in Ghana</p>
+  </div>
+</footer>
+
+<script>document.getElementById('yr').textContent = new Date().getFullYear();</script>
+
+<script>
+/* Flame starlight — embers drift up and twinkle behind the page */
+(function () {
+  var canvas = document.getElementById('embers');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var COLORS = ['#e85d04', '#ff8c1a', '#ffb340', '#ffe08a', '#c0392b'];
+  var w, h, dpr, parts;
+
+  function size() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    w = canvas.clientWidth; h = canvas.clientHeight;
+    canvas.width = w * dpr; canvas.height = h * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  function spawn(fromBottom) {
+    return {
+      x: Math.random() * w,
+      y: fromBottom ? h + Math.random() * 30 : Math.random() * h,
+      r: Math.random() * 2.1 + 0.5,
+      vy: Math.random() * 0.5 + 0.14,
+      drift: (Math.random() - 0.5) * 0.4,
+      tw: Math.random() * Math.PI * 2,
+      tws: Math.random() * 0.045 + 0.01,
+      a: Math.random() * 0.55 + 0.32,
+      c: COLORS[(Math.random() * COLORS.length) | 0]
+    };
+  }
+  function init() {
+    size();
+    var count = Math.min(120, Math.round((w * h) / 11000));
+    parts = [];
+    for (var i = 0; i < count; i++) parts.push(spawn(false));
+  }
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    for (var i = 0; i < parts.length; i++) {
+      var p = parts[i];
+      p.y -= p.vy; p.x += p.drift + Math.sin(p.tw) * 0.18; p.tw += p.tws;
+      if (p.y < -12) parts[i] = p = spawn(true);
+      var tw = 0.45 + 0.55 * Math.sin(p.tw);
+      ctx.globalAlpha = p.a * tw * 0.28;
+      ctx.fillStyle = p.c;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r * 3, 0, 6.283); ctx.fill();
+      ctx.globalAlpha = p.a * tw;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.283); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+  function loop() { draw(); requestAnimationFrame(loop); }
+
+  window.addEventListener('resize', init);
+  init();
+  if (reduce) draw(); else loop();
+})();
+</script>
+</body>
+</html>
