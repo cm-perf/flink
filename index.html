@@ -129,10 +129,19 @@
   /* features — three honest blocks */
   .feats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
   .feat { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 26px 22px; }
-  .feat .ico { width: 34px; height: 34px; margin-bottom: 16px; }
-  .feat .ico svg { width: 34px; height: 34px; stroke: var(--flame); fill: none; stroke-width: 1.6; }
+  .feat .ico { width: 44px; height: 44px; margin-bottom: 18px; position: relative; display: flex; align-items: center; justify-content: center; }
+  .feat .ico::after { content: ''; position: absolute; width: 64px; height: 64px; background: radial-gradient(circle, rgba(232,93,4,.12), transparent 70%); pointer-events: none; }
+  .feat .ico svg { width: 44px; height: 44px; stroke: url(#bolt); fill: none; stroke-width: 1.4; filter: drop-shadow(0 0 6px rgba(232,93,4,.3)); }
+  .feat .ico svg line, .feat .ico svg rect { stroke: url(#bolt); }
   .feat h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
   .feat p { font-size: 13px; color: var(--dim); line-height: 1.55; }
+
+  /* bmw story — competitive differentiator */
+  .bmw-story { max-width: 660px; margin: 0 auto; }
+  .bmw-story p { font-size: 14px; color: var(--dim); line-height: 1.7; margin-bottom: 16px; }
+  .bmw-story p strong { color: var(--text); }
+  .bmw-story .bmw-lead { font-size: 16px; color: var(--text); border-left: 3px solid var(--flame); padding-left: 18px; margin-bottom: 20px; }
+  .bmw-story .bmw-signoff { color: var(--muted); font-size: 12px; font-style: italic; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
 
   /* specs — plain rows, mono values */
   .specs { max-width: 620px; margin: 0 auto; }
@@ -162,6 +171,8 @@
   .badge { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 5px 11px; border-radius: 999px; margin-bottom: 12px; }
   .badge.now { background: rgba(232,93,4,.16); color: var(--flame); }
   .badge.req { border: 1px solid var(--border-hi); color: var(--dim); }
+  .order-card.req-card { background: var(--bg); border-color: var(--border); opacity: .85; }
+  .order-card.req-card .price { opacity: .5; }
   #reserve { scroll-margin-top: 24px; }
   @media (max-width: 720px) { .offers { grid-template-columns: 1fr; } }
 
@@ -170,6 +181,9 @@
   .cmp { border: 1px solid var(--border); border-radius: 12px; padding: 26px 24px; background: var(--surface); }
   .cmp.good { border-color: rgba(232,93,4,.45); }
   .cmp h3 { font-size: 16px; font-weight: 700; }
+  .cmp-badge { display: inline-block; font-size: 8px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 3px 9px; border-radius: 3px; margin-bottom: 10px; }
+  .cmp-badge.good { background: rgba(232,93,4,.15); color: var(--flame); }
+  .cmp-badge.bad { background: rgba(255,107,93,.1); color: #ff6b5d; }
   .cmp .sub { display: block; font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--dim); margin: 3px 0 18px; }
   .cmp ul { list-style: none; display: grid; gap: 12px; }
   .cmp li { font-size: 13px; line-height: 1.5; display: flex; gap: 10px; align-items: flex-start; color: var(--dim); }
@@ -267,6 +281,22 @@
   }
   #thankyou .btn { font-size: 12px; }
 
+  /* sticky nav */
+  .top-nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    height: 52px; display: flex; align-items: center; gap: 10px;
+    padding: 0 20px; max-width: 980px; margin: 0 auto;
+    background: rgba(0,0,0,.85); backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+  .top-nav .nav-logo { width: 22px; height: 22px; flex-shrink: 0; }
+  .top-nav .nav-name { font-size: 13px; font-weight: 700; letter-spacing: -.2px; }
+  .top-nav .nav-name em { color: var(--flame); font-style: normal; }
+  .top-nav .nav-cta { margin-left: auto; font-size: 11px; padding: 6px 14px; font-weight: 600; }
+  .hero { scroll-margin-top: 60px; }
+  section, #documents { scroll-margin-top: 60px; }
+  @media (max-width: 720px) { .top-nav .nav-name { display: none; } }
+
   /* footer */
   footer { border-top: 1px solid var(--border); padding: 40px 0 44px; }
   .foot-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
@@ -287,6 +317,15 @@
 <body>
 
 <canvas id="embers"></canvas>
+
+<nav class="top-nav">
+  <svg class="nav-logo" viewBox="0 0 80 80" fill="none">
+    <circle cx="40" cy="40" r="38" stroke="#1c69d4" stroke-width="1.5" opacity=".3"/>
+    <path d="M44 8L24 44h14l-4 30 28-38H43l4-30z" fill="url(#bolt)" opacity=".9"/>
+  </svg>
+  <span class="nav-name">Flame <em>Link</em></span>
+  <a class="btn btn-flame nav-cta" href="#order">Get Yours</a>
+</nav>
 
 <!-- Reusable logo: bolt inside a BMW-blue ring, flame-gradient bolt (matches the app) -->
 <svg width="0" height="0" style="position:absolute"><defs>
@@ -379,6 +418,7 @@
     </div>
     <div class="compare">
       <div class="cmp bad">
+        <div class="cmp-badge bad">✕ Risky</div>
         <h3>A flame tune</h3>
         <span class="sub">The hard way</span>
         <ul>
@@ -389,6 +429,7 @@
         </ul>
       </div>
       <div class="cmp good">
+        <div class="cmp-badge good">Recommended</div>
         <h3>Flame Link</h3>
         <span class="sub">The smart way</span>
         <ul>
@@ -398,6 +439,21 @@
           <li>One fair price, tuned from your phone, flames on every lift</li>
         </ul>
       </div>
+    </div>
+  </div>
+</section>
+
+<section id="bmw">
+  <div class="wrap">
+    <div class="sec-label">
+      <span class="label">Why Flame Link works on BMWs</span>
+      <h2>Other kits don't work here.</h2>
+    </div>
+    <div class="bmw-story">
+      <p class="bmw-lead">Most bolt-on flame kits cut your ignition to create a spark and dump fuel into the cylinders. That thins your oil, stresses your rings, and <strong>doesn't even work on modern BMWs.</strong></p>
+      <p>We know — we tried. The BMW DME is smarter than that. The moment it detects a missing ignition event, it cuts fuel injection entirely. No fuel, no flame. Those kits simply can't fire on a BMW.</p>
+      <p>Flame Link is different. It's a <strong>fully standalone exhaust system</strong>. It never touches your ignition, your injectors, or your DME. It injects fuel and sparks <em>in the exhaust tip</em>, downstream of everything. The ECU doesn't know it exists — and your engine runs exactly as BMW built it.</p>
+      <p class="bmw-signoff">We're a tiny automotive engineering team based in a small town in Ghana — been researching and testing on our own 428i for the longest. This isn't a theory. This is what works.</p>
     </div>
   </div>
 </section>
@@ -504,22 +560,24 @@
         <span class="label">Complete kit · BMW F &amp; G</span>
         <div class="price"><small>Starts at</small>GH₵ 8,000</div>
         <ul class="incl">
-          <li>Controller and plug-in wiring harness</li>
+          <li>Fuel Delivery &amp; Ignition module + plug-in harness</li>
           <li>Standalone — no engine mods, fully reversible</li>
           <li>The app — tune every flame stage</li>
+          <li>Android Auto app (optional) — monitor your car in real-time, control accessories like underglows &amp; interior lighting, or anything you dream up</li>
           <li>Install guide &amp; support · pro fitting from GH₵ 2,000</li>
           <li>Delivery across Ghana</li>
         </ul>
         <a class="btn btn-flame offer-cta" data-kind="BMW F&amp;G (ready-made)" href="#reserve">Order Now — GH₵ 8,000</a>
       </div>
 
-      <div class="order-card">
+      <div class="order-card req-card">
         <span class="badge req">Any car · by request</span>
         <span class="label">Custom build</span>
         <div class="price"><small>Priced on request</small>Custom</div>
         <ul class="incl">
           <li>Any car, any platform — if it can be built, we build it</li>
           <li>Flame behaviour developed and tuned to your exact car</li>
+          <li>Android Auto app (optional) — monitor, customise, control anything</li>
           <li>Special requests and one-offs welcome</li>
           <li>A real engineering job — usually around 2 months of R&amp;D</li>
           <li>Quoted up front, with staged deposits</li>
