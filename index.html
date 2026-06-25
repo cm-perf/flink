@@ -3,34 +3,34 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Flame Link — make your BMW breathe fire | CM Performance</title>
-<meta name="description" content="Flame Link shoots real flames from your BMW's exhaust — automatically on every lift-off, or on command from the app. High-grade, heat-rated build with a sealed fuel feed. Fits F &amp; G series. By CM Performance." />
+<title>Flame Link — make your car breathe fire | CM Performance</title>
+<meta name="description" content="Real flames out your exhaust on every lift-off — automatic and head-turning. Flame Link is a fully standalone bolt-on: no ECU flash, no engine mods, no risk to your motor. Tuned from your phone." />
 
 <!-- Open Graph / social previews (og-image.png is generated, 1200×630) -->
 <meta property="og:type" content="website" />
-<meta property="og:url" content="https://codekeyz.github.io/flame-link/" />
+<meta property="og:url" content="https://cm-perf.github.io/flink/" />
 <meta property="og:site_name" content="CM Performance" />
-<meta property="og:title" content="Flame Link — make your BMW breathe fire" />
-<meta property="og:description" content="Every lift-off, a burst of flame. Fires itself, tuned from your phone. Fits BMW F &amp; G series." />
-<meta property="og:image" content="https://codekeyz.github.io/flame-link/og-image.png" />
+<meta property="og:title" content="Your car. Breathing fire. 🔥" />
+<meta property="og:description" content="Real flames out your exhaust, automatically, on every lift-off. Fully standalone — zero engine mods, zero risk to your motor. Tuned from your phone. The mod everyone films." />
+<meta property="og:image" content="https://cm-perf.github.io/flink/og-image.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content="Flame Link — every lift-off, a burst of flame. For BMW F &amp; G series, by CM Performance." />
+<meta property="og:image:alt" content="Flame Link — your car breathing fire. Real exhaust flames on every lift-off, fully standalone." />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Flame Link — make your BMW breathe fire" />
-<meta name="twitter:description" content="Every lift-off, a burst of flame. Fires itself, tuned from your phone. Fits BMW F &amp; G series." />
-<meta name="twitter:image" content="https://codekeyz.github.io/flame-link/og-image.png" />
+<meta name="twitter:title" content="Your car. Breathing fire. 🔥" />
+<meta name="twitter:description" content="Real flames out your exhaust, automatically, on every lift-off. Fully standalone — zero engine mods, zero risk to your motor. Tuned from your phone. The mod everyone films." />
+<meta name="twitter:image" content="https://cm-perf.github.io/flink/og-image.png" />
 <meta name="theme-color" content="#000000" />
 <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 <link rel="apple-touch-icon" href="favicon.svg" />
 
-<!-- Orders run through the Supabase form in #order (email-OTP verified — no WhatsApp,
-     no deposit link, no paid SMS). Keys are set in the module script at the bottom;
-     do the one-time Supabase setup noted there (email template + run the migration). -->
+<!-- Orders run through the Supabase form in #order (email-OTP verified). Keys are
+      set in the module script at the bottom. -->
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet" />
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
 <style>
   :root {
@@ -46,6 +46,7 @@
     --bmw: #1c69d4;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  [hidden] { display: none !important; }
   html { scroll-behavior: smooth; }
   body {
     background: var(--bg); color: var(--text);
@@ -139,6 +140,30 @@
   .row .k { font-size: 13px; color: var(--dim); }
   .row .v { font-size: 13px; font-weight: 600; text-align: right; }
 
+  /* offers — ready-now vs custom */
+  .offers { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 900px; margin: 0 auto 22px; }
+  .offers .order-card { max-width: none; margin: 0; text-align: left; display: flex; flex-direction: column; }
+  .offers .incl { flex: 1; }
+  .badge { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 5px 11px; border-radius: 999px; margin-bottom: 12px; }
+  .badge.now { background: rgba(232,93,4,.16); color: var(--flame); }
+  .badge.req { border: 1px solid var(--border-hi); color: var(--dim); }
+  #reserve { scroll-margin-top: 24px; }
+  @media (max-width: 720px) { .offers { grid-template-columns: 1fr; } }
+
+  /* compare — tune vs Flame Link */
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; max-width: 760px; margin: 0 auto; }
+  .cmp { border: 1px solid var(--border); border-radius: 12px; padding: 26px 24px; background: var(--surface); }
+  .cmp.good { border-color: rgba(232,93,4,.45); }
+  .cmp h3 { font-size: 16px; font-weight: 700; }
+  .cmp .sub { display: block; font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--dim); margin: 3px 0 18px; }
+  .cmp ul { list-style: none; display: grid; gap: 12px; }
+  .cmp li { font-size: 13px; line-height: 1.5; display: flex; gap: 10px; align-items: flex-start; color: var(--dim); }
+  .cmp li::before { flex-shrink: 0; font-weight: 700; }
+  .cmp.bad li::before { content: '✕'; color: #ff6b5d; }
+  .cmp.good li { color: var(--text); }
+  .cmp.good li::before { content: '✓'; color: var(--flame); }
+  @media (max-width: 640px) { .compare { grid-template-columns: 1fr; } }
+
   /* faq */
   .faq { max-width: 660px; margin: 0 auto; }
   .faq details { border-bottom: 1px solid var(--border); }
@@ -181,7 +206,7 @@
 
   /* order form */
   .order-form { display: grid; gap: 10px; text-align: left; margin-top: 6px; }
-  .order-form input[type=text], .order-form input[type=tel], .order-form input[type=email], .order-form textarea, #otpStep input {
+  .order-form input[type=text], .order-form input[type=tel], .order-form input[type=email], .order-form select, .order-form textarea, #otpStep input {
     width: 100%; background: var(--bg); color: var(--text);
     border: 1px solid var(--border-hi); border-radius: 6px; padding: 11px 13px;
     font-size: 13px; font-family: inherit;
@@ -203,6 +228,29 @@
   .order-done { padding: 8px 0; }
   .order-done h3 { font-size: 19px; margin-bottom: 8px; }
   .order-done p { font-size: 13px; color: var(--dim); }
+
+  /* Full-page thank you screen */
+  #thankyou {
+    position: fixed; inset: 0; z-index: 200;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: transparent; text-align: center; padding: 40px 20px;
+  }
+  #thankyou::before {
+    content: ''; position: absolute; z-index: -1; pointer-events: none;
+    top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 700px; height: 700px; max-width: 100vw;
+    background: radial-gradient(circle, rgba(232,93,4,.15), transparent 60%);
+  }
+  #thankyou .flame-logo {
+    width: 80px; height: 80px; margin-bottom: 32px;
+  }
+  #thankyou h1 {
+    font-size: clamp(32px, 6vw, 52px); font-weight: 800; letter-spacing: -.03em; line-height: 1.1;
+  }
+  #thankyou p {
+    font-size: 15px; color: var(--dim); max-width: 380px; margin: 16px 0 32px; line-height: 1.6;
+  }
+  #thankyou .btn { font-size: 12px; }
 
   /* footer */
   footer { border-top: 1px solid var(--border); padding: 40px 0 44px; }
@@ -236,6 +284,8 @@
   </linearGradient>
 </defs></svg>
 
+<div id="mainContent">
+
 <a id="top"></a>
 
 <section class="hero" style="border-top:0">
@@ -243,14 +293,14 @@
     <div class="hrow">
       <div class="hero-copy">
         <span class="eyebrow">Flame Link</span>
-        <h1>Make your BMW<br><span class="flame">breathe fire.</span></h1>
-        <p>Flame Link turns every lift-off into a head-turning burst of flame — on its own, every single time. Then dial in the size and crackle from your phone. The loudest mod that isn't sound.</p>
+        <h1>Make your car<br><span class="flame">breathe fire.</span></h1>
+        <p>Flame Link turns every lift-off into a head-turning burst of flame — automatically. It's a <strong>fully standalone kit</strong>: it never touches your engine, your ECU or your tune, so your motor stays exactly as the factory built it. All the show, none of the risk.</p>
         <div class="ctas">
           <a class="btn btn-flame" href="#order">Get Flame Link</a>
-          <a class="btn btn-line" href="#how">How it works</a>
+          <a class="btn btn-line" href="#why">Why not just tune it?</a>
         </div>
-        <span class="tag">Fits F &amp; G series</span>
-        <span class="tag">Off-road use only</span>
+        <span class="tag">Standalone · no engine mods</span>
+        <span class="tag">BMW F &amp; G today · more cars soon</span>
       </div>
 
       <div class="hero-visual">
@@ -284,23 +334,54 @@
   <div class="wrap">
     <div class="sec-label">
       <span class="label">What it does</span>
-      <h2>Three things, done right.</h2>
+      <h2>Big flames. Zero compromise.</h2>
     </div>
     <div class="feats">
       <div class="feat">
-        <div class="ico"><svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/></svg></div>
-        <h3>Tune it your way</h3>
-        <p>Set flame size, intensity and crackle from the app. Save your setups and switch them on the fly — subtle daily or full send.</p>
-      </div>
-      <div class="feat">
         <div class="ico"><svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg></div>
         <h3>Fires on its own</h3>
-        <p>Lift off the gas, downshift, or blip it in park — Flame Link lights instantly. No phone in hand, no buttons. Or fire it yourself from the app.</p>
+        <p>Lift off, downshift, or blip it in park — Flame Link lights on cue, every time. No phone in hand, no buttons to press. The party trick that never gets old.</p>
       </div>
       <div class="feat">
         <div class="ico"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-        <h3>Built to take the heat</h3>
-        <p>High-grade, heat-rated parts and a sealed gasoline feed — no open fuel, nothing pooling. Hard burn limits, a hardware watchdog and fused power cut it the instant anything's off.</p>
+        <h3>Your engine, untouched</h3>
+        <p>A fully standalone kit — no ECU flash, no remap, no engine mods. It works in the exhaust, downstream of everything that matters, so your motor stays factory-reliable. And it all comes off without a trace.</p>
+      </div>
+      <div class="feat">
+        <div class="ico"><svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/></svg></div>
+        <h3>Tune it from your phone</h3>
+        <p>Dial flame size and crackle to taste, save your looks, switch them on the fly — subtle daily or full send. Your car, your show.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="why">
+  <div class="wrap">
+    <div class="sec-label">
+      <span class="label">Tune vs. Flame Link</span>
+      <h2>“Can’t I just get a tune?”</h2>
+    </div>
+    <div class="compare">
+      <div class="cmp bad">
+        <h3>A flame tune</h3>
+        <span class="sub">The hard way</span>
+        <ul>
+          <li>Reflashes your ECU and leans on fuel-dumping and timing tricks</li>
+          <li>Pumps extra heat and stress into an engine that wasn’t built for it</li>
+          <li>Puts your reliability, your warranty and your resale on the line</li>
+          <li>Pricey — and not something you undo on a whim</li>
+        </ul>
+      </div>
+      <div class="cmp good">
+        <h3>Flame Link</h3>
+        <span class="sub">The smart way</span>
+        <ul>
+          <li>Standalone — bolts on, never touches your ECU or engine</li>
+          <li>Flames happen in the exhaust, so your motor stays factory-reliable</li>
+          <li>Comes off clean — no trace, no warranty drama</li>
+          <li>One fair price, tuned from your phone, flames on every lift</li>
+        </ul>
       </div>
     </div>
   </div>
@@ -312,7 +393,8 @@
       <span class="label">Specs</span>
       <h2>The details.</h2>
     </div>
-    <div class="row"><span class="k">Fits</span><span class="v mono">BMW F &amp; G series</span></div>
+    <div class="row"><span class="k">Fits</span><span class="v mono">BMW F &amp; G · more soon</span></div>
+    <div class="row"><span class="k">Engine impact</span><span class="v mono">None · fully standalone</span></div>
     <div class="row"><span class="k">Auto-fire</span><span class="v mono">Every lift-off</span></div>
     <div class="row"><span class="k">Control</span><span class="v mono">App · wireless</span></div>
     <div class="row"><span class="k">Flame stages</span><span class="v mono">Multiple · tunable</span></div>
@@ -330,8 +412,12 @@
       <h2>Before you ask.</h2>
     </div>
     <details>
-      <summary>Will it damage my engine?</summary>
-      <p>No. Flame Link works entirely in the exhaust, downstream of your engine — it never touches your internals, timing or factory tune. How your car drives doesn't change.</p>
+      <summary>Will it hurt my engine or reliability?</summary>
+      <p>No. Flame Link is fully standalone — it works in the exhaust, downstream of your engine, and never touches your internals, timing or factory tune. Your motor runs exactly as the factory built it, and the kit comes off without a trace.</p>
+    </details>
+    <details>
+      <summary>Why not just get a flame tune instead?</summary>
+      <p>A flame tune reflashes your ECU and forces flames by dumping fuel and retarding timing — that piles heat and stress onto your engine, can hit your warranty and resale, costs more, and isn't easy to undo. Flame Link makes the same flames without any of that: a bolt-on that leaves your engine 100% stock. Same show, none of the risk.</p>
     </details>
     <details>
       <summary>Is it safe?</summary>
@@ -347,7 +433,7 @@
     </details>
     <details>
       <summary>Which cars does it fit?</summary>
-      <p>BMW F &amp; G series, with a plug-in harness made for them. Not sure about yours? Drop your model in the order form and we'll confirm.</p>
+      <p>The kit itself is universal — it lives on the exhaust, not tied to any one engine. Today the <strong>software is dialled in for BMW F &amp; G series</strong> (with a plug-in harness), and we're rolling out support for more platforms. Drop your model in the order form and we'll tell you where it stands and ping you when yours is ready.</p>
     </details>
     <details>
       <summary>Can I control how big the flames are?</summary>
@@ -368,24 +454,53 @@
   <div class="wrap">
     <div class="sec-label">
       <span class="label">Get yours</span>
-      <h2>One kit. Everything in it.</h2>
+      <h2>Pick your build.</h2>
     </div>
-    <div class="order-card">
-      <span class="label">Complete kit</span>
-      <div class="price"><small>Starts at</small>GH₵ 8,000</div>
-      <ul class="incl">
-        <li>Controller and wiring harness</li>
-        <li>The app — tune every flame stage</li>
-        <li>Step-by-step install guide and support</li>
-        <li>Delivery across Ghana</li>
-      </ul>
+
+    <div class="offers">
+      <div class="order-card">
+        <span class="badge now">Ready now</span>
+        <span class="label">Complete kit · BMW F &amp; G</span>
+        <div class="price"><small>Starts at</small>GH₵ 8,000</div>
+        <ul class="incl">
+          <li>Controller and plug-in wiring harness</li>
+          <li>Standalone — no engine mods, fully reversible</li>
+          <li>The app — tune every flame stage</li>
+          <li>Install guide &amp; support · pro fitting from GH₵ 2,000</li>
+          <li>Delivery across Ghana</li>
+        </ul>
+        <a class="btn btn-flame offer-cta" data-kind="BMW F&amp;G (ready-made)" href="#reserve">Reserve yours</a>
+      </div>
+
+      <div class="order-card">
+        <span class="badge req">Any car · by request</span>
+        <span class="label">Custom build</span>
+        <div class="price"><small>Priced on request</small>Custom</div>
+        <ul class="incl">
+          <li>Any car, any platform — if it can be built, we build it</li>
+          <li>Flame behaviour developed and tuned to your exact car</li>
+          <li>Special requests and one-offs welcome</li>
+          <li>A real engineering job — usually around 2 months of R&amp;D</li>
+          <li>Quoted up front, with staged deposits</li>
+        </ul>
+        <a class="btn btn-line offer-cta" data-kind="Custom build" href="#reserve">Request a custom build</a>
+      </div>
+    </div>
+
+    <div class="order-card" id="reserve">
+      <span class="label" id="reserveLabel">Reserve your build</span>
       <form id="orderForm" class="order-form" novalidate>
+        <select name="kind" id="orderKind" aria-label="What are you after?">
+          <option value="BMW F&amp;G (ready-made)">Flame Link for BMW F &amp; G — GH₵ 8,000</option>
+          <option value="Custom build">Custom build — other car or special request</option>
+        </select>
         <input type="text" name="name" placeholder="Full name" autocomplete="name" required />
         <input type="email" name="email" placeholder="Email — we'll send a code to verify" autocomplete="email" required />
         <input type="tel" name="phone" placeholder="Phone — e.g. +233 20 618 7456" autocomplete="tel" required />
-        <input type="text" name="model" placeholder="Your BMW — e.g. F30 335i" required />
-        <textarea name="note" placeholder="Anything else? (optional)"></textarea>
+        <input type="text" name="model" placeholder="Your car — e.g. F30 335i" required />
+        <textarea name="note" placeholder="For a custom build, tell us the car and what you want (optional)"></textarea>
         <label class="check"><input type="checkbox" name="install" /> Add professional installation (GH₵ 2,000)</label>
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAADrBTjHpERpNTuz8" data-size="invisible" id="turnstileWidget"></div>
         <button type="submit" class="btn btn-flame" id="sendCodeBtn">Verify email &amp; reserve</button>
       </form>
 
@@ -396,21 +511,8 @@
         <button class="btn btn-line" id="resendBtn" type="button">Use a different email</button>
       </div>
 
-      <div id="orderDone" class="order-done" hidden>
-        <h3 class="flame">Order placed 🔥</h3>
-        <p>Your number's verified and we've got your details. We'll reach out to confirm your build and delivery.</p>
-      </div>
-
       <p id="orderStatus" class="form-status" role="status" aria-live="polite"></p>
-      <p class="note">Fits BMW F &amp; G series only · we confirm your build &amp; delivery after you order</p>
-    </div>
-
-    <div class="addon">
-      <div>
-        <span class="a-name">Professional installation</span>
-        <span class="a-sub">Fitted by our team — optional</span>
-      </div>
-      <span class="a-price">GH₵ 2,000</span>
+      <p class="note">BMW F &amp; G ready now · any other car by custom request · standalone, won't touch your engine</p>
     </div>
   </div>
 </section>
@@ -423,6 +525,7 @@
         <a href="#specs">Specs</a>
         <a href="#faq">FAQ</a>
         <a href="#order">Order</a>
+        <a href="privacy.html">Privacy</a>
         <a href="mailto:cmperformancegh@gmail.com">Email</a>
       </div>
       <a class="totop" href="#top">Back to top ↑</a>
@@ -431,6 +534,19 @@
     <p class="copy mono">© <span id="yr"></span> CM Performance · Made in Ghana</p>
   </div>
 </footer>
+
+</div><!-- /mainContent -->
+
+<!-- Full-page thank you screen (shown after successful order) -->
+<div id="thankyou" hidden>
+  <svg class="flame-logo" viewBox="0 0 80 80" fill="none">
+    <circle cx="40" cy="40" r="38" stroke="#1c69d4" stroke-width="1.5" opacity="0.3"/>
+    <path d="M44 8L24 44h14l-4 30 28-38H43l4-30z" fill="url(#bolt)" opacity="0.9"/>
+  </svg>
+  <h1>Thank you</h1>
+  <p>We'll get in touch soon.</p>
+  <button class="btn btn-line" id="backHomeBtn">Back to home</button>
+</div>
 
 <script>document.getElementById('yr').textContent = new Date().getFullYear();</script>
 
@@ -493,24 +609,32 @@
 </script>
 <script type="module">
 /*
-  ORDERS — Supabase + EMAIL-OTP. People can only order through this form, and only
-  after verifying a real email (a 6-digit code), so every order is a human who put
-  in the effort. Email OTP uses Supabase's built-in email — NO Twilio, no paid SMS,
-  nothing extra to run. (The phone number is still collected as the contact.)
+  ORDERS — Supabase + EMAIL-OTP. Every order is from a human who verified a real
+  email (6-digit code). Email OTP uses Supabase's built-in email — no Twilio, no
+  paid SMS, nothing extra to run. (Phone number is still collected as a contact.)
 
-  ONE-TIME SETUP in your Supabase project (https://supabase.com):
-    1. Project Settings → API: Project URL + publishable key are in the consts below.
-    2. Authentication → Email is ON by default. So the form shows a CODE (not a magic
-       link), edit the template: Authentication → Email Templates → "Magic Link" →
-       include the token, e.g.  Your Flame Link code is {{ .Token }}
+  SECURITY LAYERS:
+    - Cloudflare Turnstile CAPTCHA (prevents automated bots)
+    - Email OTP verification (proves a real human with email access)
+    - HTML stripped from all text inputs (prevents XSS/CSV injection)
+    - 60s cooldown on OTP re-send (rate limiting)
+    - Supabase RLS: only authenticated users can insert, only their own row
+    - Session not persisted in browser (no lingering auth tokens)
+
+  ONE-TIME SETUP in your Supabase project:
+    1. Edge Function: supabase functions deploy verify-turnstile
+       (requires Cloudflare Turnstile site key + secret key — set with
+        supabase secrets set TURNSTILE_SECRET_KEY=<your_secret>)
+       Test keys (always pass): site=1x000... secret=1x000...
+       Get real keys: https://dash.cloudflare.com/?to=/:account/turnstile
+    2. Authentication → Email Templates → "Magic Link" → include the token:
+       Your Flame Link code is {{ .Token }}
        (Built-in email is rate-limited — fine to launch on; add a free SMTP tier
-       like Resend later if volume grows. Still no SMS cost.)
-    3. The orders table + RLS live in a migration: supabase/migrations/*_create_orders.sql.
-       Apply it with:  supabase link --project-ref jmdqqgftsfmavwnbqitx  &&  supabase db push
-       (or paste that SQL in the dashboard SQL editor).
-
-  The publishable key is safe to ship in the page — RLS is what protects the table
-  (no one can read others' orders; you read them from the Supabase dashboard).
+       like Resend later. Still no SMS cost.)
+    3. Database table + RLS are in supabase/migrations/*_create_orders.sql.
+       Apply: supabase link && supabase db push
+       (or paste the SQL in the dashboard SQL editor).
+    4. The publishable key below is safe to ship — RLS protects the table.
 */
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
@@ -519,7 +643,6 @@ const SUPABASE_ANON_KEY = 'sb_publishable_HYkDj6F6n6byI8l76vh-VQ_s2hGFfFS';
 
 const form = document.getElementById('orderForm');
 const otpStep = document.getElementById('otpStep');
-const done = document.getElementById('orderDone');
 const statusEl = document.getElementById('orderStatus');
 const sendBtn = document.getElementById('sendCodeBtn');
 const verifyBtn = document.getElementById('verifyBtn');
@@ -539,44 +662,129 @@ const supabase = configured
   : null;
 let pending = null; // the order, held until the email is verified
 
+function stripHtml(s) {
+  const el = document.createElement('div');
+  el.textContent = s;
+  return el.innerHTML;
+}
+
 function setStatus(msg, kind) {
   statusEl.textContent = msg || '';
   statusEl.className = 'form-status' + (kind ? ' ' + kind : '');
 }
+
 function normPhone(v) {
   v = v.trim().replace(/[\s\-()]/g, '');
-  if (v.startsWith('00')) v = '+' + v.slice(2);         // 00233… → +233…
-  else if (v.startsWith('0')) v = '+233' + v.slice(1);  // local 0… → +233…
-  else if (/^233/.test(v)) v = '+' + v;                 // 233… → +233…
+  if (v.startsWith('00')) v = '+' + v.slice(2);
+  else if (v.startsWith('0')) v = '+233' + v.slice(1);
+  else if (/^233/.test(v)) v = '+' + v;
   return v;
 }
 
+// Client-side rate limiter — prevent re-sending OTP for 60s
+let cooldownTimer = null;
+function cooldownBtn(seconds) {
+  sendBtn.disabled = true;
+  const orig = sendBtn.textContent;
+  let remaining = seconds;
+  sendBtn.textContent = 'Wait ' + remaining + 's';
+  cooldownTimer = setInterval(() => {
+    remaining--;
+    if (remaining <= 0) {
+      clearInterval(cooldownTimer);
+      cooldownTimer = null;
+      sendBtn.disabled = false;
+      sendBtn.textContent = orig;
+    } else {
+      sendBtn.textContent = 'Wait ' + remaining + 's';
+    }
+  }, 1000);
+}
+
+async function verifyTurnstile() {
+  setStatus('Security check…');
+  turnstile?.reset();
+  turnstile?.execute();
+  const token = await new Promise((resolve) => {
+    const check = setInterval(() => {
+      const t = turnstile?.getResponse();
+      if (t) { clearInterval(check); resolve(t); }
+    }, 200);
+    setTimeout(() => { clearInterval(check); resolve(null); }, 15000);
+  });
+  if (!token) {
+    setStatus('Security check did not complete — try again.', 'err');
+    return false;
+  }
+  setStatus('Verifying…');
+  try {
+    const res = await fetch(
+      SUPABASE_URL + '/functions/v1/verify-turnstile',
+      { method: 'POST', headers: { 'Content-Type': 'application/json', 'apiKey': SUPABASE_ANON_KEY }, body: JSON.stringify({ token }) }
+    );
+    const data = await res.json();
+    if (!data.valid) {
+      setStatus('Security check failed — try again.', 'err');
+      return false;
+    }
+    return true;
+  } catch {
+    setStatus('Security check unavailable — try again.', 'err');
+    return false;
+  }
+}
+
+// The two offer cards (Ready-now / Custom) point at the same form — clicking one
+// presets the "what are you after?" selector and the form heading, then the
+// anchor scrolls down to it.
+document.querySelectorAll('.offer-cta').forEach((a) => {
+  a.addEventListener('click', () => {
+    const kind = a.getAttribute('data-kind') || '';
+    const sel = document.getElementById('orderKind');
+    if (sel) for (const o of sel.options) if (o.value === kind) { sel.value = kind; break; }
+    const lbl = document.getElementById('reserveLabel');
+    if (lbl) lbl.textContent = kind === 'Custom build' ? 'Request a custom build' : 'Reserve your kit';
+  });
+});
+
 if (!configured) {
-  setStatus('Ordering isn’t switched on yet — check back shortly.', 'err');
+  setStatus('Ordering isn\'t switched on yet — check back shortly.', 'err');
   if (sendBtn) sendBtn.disabled = true;
 }
+
+// Reset Turnstile widget on page load
+window.addEventListener('load', () => { try { turnstile?.reset(); } catch (_) {} });
 
 form?.addEventListener('submit', async (e) => {
   e.preventDefault();
   if (!supabase) return;
+
   const d = new FormData(form);
-  const name = (d.get('name') || '').toString().trim();
+  const name = stripHtml((d.get('name') || '').toString().trim());
   const email = (d.get('email') || '').toString().trim();
   const phone = normPhone((d.get('phone') || '').toString());
-  const model = (d.get('model') || '').toString().trim();
-  const note = (d.get('note') || '').toString().trim();
+  const model = stripHtml((d.get('model') || '').toString().trim());
+  const note = stripHtml((d.get('note') || '').toString().trim());
   const install = d.get('install') === 'on';
+  const kind = (d.get('kind') || '').toString();
 
-  if (!name || !model) { setStatus('Please add your name and your BMW model.', 'err'); return; }
+  if (!name || !model) { setStatus('Please add your name and your car.', 'err'); return; }
   if (!/^\S+@\S+\.\S+$/.test(email)) { setStatus('Enter a valid email — that is where your code goes.', 'err'); return; }
   if (!/^\+\d{8,15}$/.test(phone)) { setStatus('Enter a valid phone with country code, e.g. +233…', 'err'); return; }
 
-  pending = { name, email, phone, model, note, install };
+  // Security check 1: CAPTCHA
+  const captchaOk = await verifyTurnstile();
+  try { turnstile?.reset(); } catch (_) {}
+  if (!captchaOk) return;
+
+  pending = { name, email, phone, model, note, install, kind };
   sendBtn.disabled = true;
   setStatus('Emailing you a code…');
   const { error } = await supabase.auth.signInWithOtp({ email });
-  sendBtn.disabled = false;
-  if (error) { setStatus(error.message || 'Could not send the code — try again.', 'err'); return; }
+  if (error) { sendBtn.disabled = false; setStatus(error.message || 'Could not send the code — try again.', 'err'); return; }
+
+  // Security check 3: 60s cooldown on re-send
+  cooldownBtn(60);
 
   otpDest.textContent = email;
   form.hidden = true;
@@ -596,13 +804,16 @@ verifyBtn?.addEventListener('click', async () => {
 
   const { error: iErr } = await supabase.from('orders').insert({
     name: pending.name, phone: pending.phone, email: pending.email,
-    model: pending.model, install: pending.install, note: pending.note || null,
+    model: pending.model, install: pending.install,
+    kind: pending.kind,
+    note: pending.note || null,
   });
   verifyBtn.disabled = false;
   if (iErr) { setStatus(iErr.message || 'Verified, but the order didn’t save — try again.', 'err'); return; }
 
   otpStep.hidden = true;
-  done.hidden = false;
+  document.getElementById('mainContent').hidden = true;
+  document.getElementById('thankyou').hidden = false;
   setStatus('');
 });
 
@@ -611,6 +822,11 @@ resendBtn?.addEventListener('click', () => {
   form.hidden = false;
   otpCode.value = '';
   setStatus('');
+  try { turnstile?.reset(); } catch (_) {}
+});
+
+document.getElementById('backHomeBtn')?.addEventListener('click', () => {
+  location.href = '/';
 });
 </script>
 </body>
