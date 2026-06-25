@@ -4,14 +4,14 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Flame Link — make your car breathe fire | CM Performance</title>
-<meta name="description" content="Real flames out your exhaust on every lift-off — automatic and head-turning. Flame Link is a fully standalone bolt-on: no ECU flash, no engine mods, no risk to your motor. Tuned from your phone." />
+<meta name="description" content="Flame Link — fully standalone, zero engine mods. Real flames out your exhaust on every lift-off. No ECU flash, no risk to your motor." />
 
 <!-- Open Graph / social previews (og-image.png is generated, 1200×630) -->
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://cm-perf.github.io/flink/" />
 <meta property="og:site_name" content="CM Performance" />
 <meta property="og:title" content="Your car. Breathing fire. 🔥" />
-<meta property="og:description" content="Real flames out your exhaust, automatically, on every lift-off. Fully standalone — zero engine mods, zero risk to your motor. Tuned from your phone. The mod everyone films." />
+<meta property="og:description" content="Fully standalone, zero engine mods. Real flames out your exhaust on every lift-off. The mod everyone films." />
 <meta property="og:image" content="https://cm-perf.github.io/flink/og-image.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
@@ -139,6 +139,21 @@
   .row { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--border); }
   .row .k { font-size: 13px; color: var(--dim); }
   .row .v { font-size: 13px; font-weight: 600; text-align: right; }
+
+  /* after-order steps */
+  .steps-bar { display: flex; align-items: flex-start; justify-content: center; gap: 0; max-width: 720px; margin: 0 auto 48px; }
+  .step-item { flex: 1; text-align: center; position: relative; padding: 0 8px; }
+  .step-num {
+    width: 36px; height: 36px; margin: 0 auto 10px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%; font-size: 13px; font-weight: 700;
+    background: var(--surface); border: 1px solid var(--border-hi); color: var(--dim);
+  }
+  .step-item.active .step-num { background: var(--flame); color: #000; border-color: var(--flame); }
+  .step-item h4 { font-size: 11px; font-weight: 600; margin-bottom: 4px; }
+  .step-item p { font-size: 10px; color: var(--dim); line-height: 1.4; }
+  .step-arrow { color: var(--muted); font-size: 18px; align-self: center; padding-top: 6px; flex-shrink: 0; }
+  @media (max-width: 640px) { .steps-bar { flex-wrap: wrap; gap: 16px; } .step-arrow { display: none; } }
 
   /* offers — ready-now vs custom */
   .offers { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 900px; margin: 0 auto 22px; }
@@ -294,9 +309,9 @@
       <div class="hero-copy">
         <span class="eyebrow">Flame Link</span>
         <h1>Make your car<br><span class="flame">breathe fire.</span></h1>
-        <p>Flame Link turns every lift-off into a head-turning burst of flame — automatically. It's a <strong>fully standalone kit</strong>: it never touches your engine, your ECU or your tune, so your motor stays exactly as the factory built it. All the show, none of the risk.</p>
+        <p>Flame Link is a <strong>fully standalone kit</strong> — it never touches your engine, ECU or tune. Your motor stays exactly as the factory built it. It just turns every lift-off into a head-turning burst of flame, automatically. All the show, none of the risk.</p>
         <div class="ctas">
-          <a class="btn btn-flame" href="#order">Get Flame Link</a>
+          <a class="btn btn-flame" href="#order">Get Yours Now</a>
           <a class="btn btn-line" href="#why">Why not just tune it?</a>
         </div>
         <span class="tag">Standalone · no engine mods</span>
@@ -457,6 +472,32 @@
       <h2>Pick your build.</h2>
     </div>
 
+    <div class="steps-bar">
+      <div class="step-item active">
+        <div class="step-num">1</div>
+        <h4>Place order</h4>
+        <p>Pick your build and verify your email.</p>
+      </div>
+      <span class="step-arrow">→</span>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <h4>We reach out</h4>
+        <p>Confirm your build, answer questions, schedule delivery.</p>
+      </div>
+      <span class="step-arrow">→</span>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <h4>Build &amp; ship</h4>
+        <p>We build your kit and ship or schedule installation.</p>
+      </div>
+      <span class="step-arrow">→</span>
+      <div class="step-item">
+        <div class="step-num">4</div>
+        <h4>Enjoy</h4>
+        <p>Flames on every lift-off. All show, no risk.</p>
+      </div>
+    </div>
+
     <div class="offers">
       <div class="order-card">
         <span class="badge now">Ready now</span>
@@ -469,7 +510,7 @@
           <li>Install guide &amp; support · pro fitting from GH₵ 2,000</li>
           <li>Delivery across Ghana</li>
         </ul>
-        <a class="btn btn-flame offer-cta" data-kind="BMW F&amp;G (ready-made)" href="#reserve">Reserve yours</a>
+        <a class="btn btn-flame offer-cta" data-kind="BMW F&amp;G (ready-made)" href="#reserve">Order Now — GH₵ 8,000</a>
       </div>
 
       <div class="order-card">
@@ -483,12 +524,12 @@
           <li>A real engineering job — usually around 2 months of R&amp;D</li>
           <li>Quoted up front, with staged deposits</li>
         </ul>
-        <a class="btn btn-line offer-cta" data-kind="Custom build" href="#reserve">Request a custom build</a>
+        <a class="btn btn-line offer-cta" data-kind="Custom build" href="#reserve">Request Custom Build</a>
       </div>
     </div>
 
     <div class="order-card" id="reserve">
-      <span class="label" id="reserveLabel">Reserve your build</span>
+      <span class="label" id="reserveLabel">Order Your Flame Link</span>
       <form id="orderForm" class="order-form" novalidate>
         <select name="kind" id="orderKind" aria-label="What are you after?">
           <option value="BMW F&amp;G (ready-made)">Flame Link for BMW F &amp; G — GH₵ 8,000</option>
@@ -501,13 +542,13 @@
         <textarea name="note" placeholder="For a custom build, tell us the car and what you want (optional)"></textarea>
         <label class="check"><input type="checkbox" name="install" /> Add professional installation (GH₵ 2,000)</label>
         <div class="cf-turnstile" data-sitekey="0x4AAAAAADrBTjHpERpNTuz8" data-size="invisible" id="turnstileWidget"></div>
-        <button type="submit" class="btn btn-flame" id="sendCodeBtn">Verify email &amp; reserve</button>
+        <button type="submit" class="btn btn-flame" id="sendCodeBtn">Verify &amp; Place Order</button>
       </form>
 
       <div id="otpStep" hidden>
         <p>Enter the code we emailed to <span id="otpDest" class="mono"></span>.</p>
         <input id="otpCode" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="••••••••" />
-        <button class="btn btn-flame" id="verifyBtn">Confirm &amp; place order</button>
+        <button class="btn btn-flame" id="verifyBtn">Complete Order</button>
         <button class="btn btn-line" id="resendBtn" type="button">Use a different email</button>
       </div>
 
@@ -743,7 +784,7 @@ document.querySelectorAll('.offer-cta').forEach((a) => {
     const sel = document.getElementById('orderKind');
     if (sel) for (const o of sel.options) if (o.value === kind) { sel.value = kind; break; }
     const lbl = document.getElementById('reserveLabel');
-    if (lbl) lbl.textContent = kind === 'Custom build' ? 'Request a custom build' : 'Reserve your kit';
+    if (lbl) lbl.textContent = kind === 'Custom build' ? 'Request Custom Build' : 'Order Flame Link Kit';
   });
 });
 
