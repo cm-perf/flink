@@ -3,26 +3,30 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Flame Link — BMW flame kit controller by CM Performance</title>
-<meta name="description" content="Flame Link is a BMW flame kit controller for F &amp; G series chassis. Tune flame stages from the app, or let it auto-fire off your car's CAN bus on every lift-off. By CM Performance." />
+<title>Flame Link — make your BMW breathe fire | CM Performance</title>
+<meta name="description" content="Flame Link shoots real flames from your BMW's exhaust — automatically on every lift-off, or on command from the app. High-grade, heat-rated build with a sealed fuel feed. Fits F &amp; G series. By CM Performance." />
 
 <!-- Open Graph / social previews (og-image.png is generated, 1200×630) -->
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://codekeyz.github.io/flame-link/" />
 <meta property="og:site_name" content="CM Performance" />
-<meta property="og:title" content="Flame Link — BMW flame kit controller" />
-<meta property="og:description" content="Every downshift, a burst of flame. Auto-fires off the CAN bus, tuned from your phone. Fits BMW F &amp; G series." />
+<meta property="og:title" content="Flame Link — make your BMW breathe fire" />
+<meta property="og:description" content="Every lift-off, a burst of flame. Fires itself, tuned from your phone. Fits BMW F &amp; G series." />
 <meta property="og:image" content="https://codekeyz.github.io/flame-link/og-image.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content="Flame Link — every downshift, a burst of flame. BMW F &amp; G series flame kit by CM Performance." />
+<meta property="og:image:alt" content="Flame Link — every lift-off, a burst of flame. For BMW F &amp; G series, by CM Performance." />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Flame Link — BMW flame kit controller" />
-<meta name="twitter:description" content="Every downshift, a burst of flame. Auto-fires off the CAN bus, tuned from your phone. Fits BMW F &amp; G series." />
+<meta name="twitter:title" content="Flame Link — make your BMW breathe fire" />
+<meta name="twitter:description" content="Every lift-off, a burst of flame. Fires itself, tuned from your phone. Fits BMW F &amp; G series." />
 <meta name="twitter:image" content="https://codekeyz.github.io/flame-link/og-image.png" />
 <meta name="theme-color" content="#000000" />
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<link rel="apple-touch-icon" href="favicon.svg" />
 
-<!-- Fill in before publishing: WhatsApp number (3 links) and price (one line). Search "EDIT". -->
+<!-- Orders run through the Supabase form in #order (email-OTP verified — no WhatsApp,
+     no deposit link, no paid SMS). Keys are set in the module script at the bottom;
+     do the one-time Supabase setup noted there (email template + run the migration). -->
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -135,6 +139,18 @@
   .row .k { font-size: 13px; color: var(--dim); }
   .row .v { font-size: 13px; font-weight: 600; text-align: right; }
 
+  /* faq */
+  .faq { max-width: 660px; margin: 0 auto; }
+  .faq details { border-bottom: 1px solid var(--border); }
+  .faq summary {
+    list-style: none; cursor: pointer; padding: 18px 0; font-size: 15px; font-weight: 600;
+    display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: '+'; color: var(--flame); font-weight: 700; font-size: 20px; line-height: 1; }
+  .faq details[open] summary::after { content: '–'; }
+  .faq details p { font-size: 13px; color: var(--dim); line-height: 1.65; padding: 0 0 18px; max-width: 64ch; }
+
   /* order */
   .order-card {
     max-width: 440px; margin: 0 auto; text-align: center; position: relative; overflow: hidden;
@@ -162,6 +178,31 @@
   .addon .a-name { font-size: 13px; font-weight: 600; }
   .addon .a-sub { display: block; font-size: 11px; color: var(--dim); margin-top: 2px; }
   .addon .a-price { font-size: 15px; font-weight: 700; white-space: nowrap; font-family: 'JetBrains Mono', monospace; }
+
+  /* order form */
+  .order-form { display: grid; gap: 10px; text-align: left; margin-top: 6px; }
+  .order-form input[type=text], .order-form input[type=tel], .order-form input[type=email], .order-form textarea, #otpStep input {
+    width: 100%; background: var(--bg); color: var(--text);
+    border: 1px solid var(--border-hi); border-radius: 6px; padding: 11px 13px;
+    font-size: 13px; font-family: inherit;
+  }
+  .order-form textarea { min-height: 60px; resize: vertical; }
+  .order-form ::placeholder { color: var(--muted); }
+  .order-form input:focus, .order-form textarea:focus, #otpStep input:focus {
+    outline: none; border-color: var(--flame);
+  }
+  .check { display: flex; align-items: center; gap: 9px; font-size: 12px; color: var(--dim); cursor: pointer; }
+  .check input { width: 15px; height: 15px; accent-color: var(--flame); flex-shrink: 0; }
+  #otpStep { text-align: left; margin-top: 6px; }
+  #otpStep p { font-size: 12px; color: var(--dim); margin-bottom: 10px; }
+  #otpStep input { margin-bottom: 10px; letter-spacing: 6px; text-align: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 18px; }
+  .form-status { font-size: 12px; margin-top: 12px; min-height: 1em; }
+  .form-status.err { color: #ff6b5d; }
+  .form-status.ok { color: var(--flame); }
+  .order-done { padding: 8px 0; }
+  .order-done h3 { font-size: 19px; margin-bottom: 8px; }
+  .order-done p { font-size: 13px; color: var(--dim); }
 
   /* footer */
   footer { border-top: 1px solid var(--border); padding: 40px 0 44px; }
@@ -201,9 +242,9 @@
   <div class="wrap">
     <div class="hrow">
       <div class="hero-copy">
-        <span class="eyebrow">BMW Flame Kit</span>
-        <h1>Every downshift,<br><span class="flame">a burst of flame.</span></h1>
-        <p>The BMW flame kit that fires itself. Lift off the throttle and it lights — automatically, every single time. Then tune it your way from the app.</p>
+        <span class="eyebrow">Flame Link</span>
+        <h1>Make your BMW<br><span class="flame">breathe fire.</span></h1>
+        <p>Flame Link turns every lift-off into a head-turning burst of flame — on its own, every single time. Then dial in the size and crackle from your phone. The loudest mod that isn't sound.</p>
         <div class="ctas">
           <a class="btn btn-flame" href="#order">Get Flame Link</a>
           <a class="btn btn-line" href="#how">How it works</a>
@@ -248,18 +289,18 @@
     <div class="feats">
       <div class="feat">
         <div class="ico"><svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/></svg></div>
-        <h3>Tune from your phone</h3>
-        <p>Set flame length, intensity and crackle in the app over Bluetooth. Save tunes, switch them on the fly.</p>
+        <h3>Tune it your way</h3>
+        <p>Set flame size, intensity and crackle from the app. Save your setups and switch them on the fly — subtle daily or full send.</p>
       </div>
       <div class="feat">
         <div class="ico"><svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg></div>
-        <h3>Fires on every downshift</h3>
-        <p>Lift off the throttle and it lights on its own — automatic, instant, no phone and no buttons to press.</p>
+        <h3>Fires on its own</h3>
+        <p>Lift off the gas, downshift, or blip it in park — Flame Link lights instantly. No phone in hand, no buttons. Or fire it yourself from the app.</p>
       </div>
       <div class="feat">
         <div class="ico"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-        <h3>Safe by design</h3>
-        <p>Hard burn-time limits, a hardware watchdog and fused power. It shuts itself off if anything goes wrong.</p>
+        <h3>Built to take the heat</h3>
+        <p>High-grade, heat-rated parts and a sealed gasoline feed — no open fuel, nothing pooling. Hard burn limits, a hardware watchdog and fused power cut it the instant anything's off.</p>
       </div>
     </div>
   </div>
@@ -272,12 +313,54 @@
       <h2>The details.</h2>
     </div>
     <div class="row"><span class="k">Fits</span><span class="v mono">BMW F &amp; G series</span></div>
-    <div class="row"><span class="k">Auto-fire</span><span class="v mono">Every downshift</span></div>
+    <div class="row"><span class="k">Auto-fire</span><span class="v mono">Every lift-off</span></div>
     <div class="row"><span class="k">Control</span><span class="v mono">App · wireless</span></div>
     <div class="row"><span class="k">Flame stages</span><span class="v mono">Multiple · tunable</span></div>
+    <div class="row"><span class="k">Build</span><span class="v mono">Heat-rated · sealed fuel feed</span></div>
     <div class="row"><span class="k">Power</span><span class="v mono">12V · fused</span></div>
     <div class="row"><span class="k">App</span><span class="v mono">Android · iOS</span></div>
     <div class="row"><span class="k">Use</span><span class="v mono">Off-road only</span></div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap faq">
+    <div class="sec-label">
+      <span class="label">Questions</span>
+      <h2>Before you ask.</h2>
+    </div>
+    <details>
+      <summary>Will it damage my engine?</summary>
+      <p>No. Flame Link works entirely in the exhaust, downstream of your engine — it never touches your internals, timing or factory tune. How your car drives doesn't change.</p>
+    </details>
+    <details>
+      <summary>Is it safe?</summary>
+      <p>It's built around safety: hard burn-time limits, a hardware watchdog and fused power, and it cuts every output the instant something's off. High-grade, heat-rated parts and a sealed gasoline feed — no open fuel.</p>
+    </details>
+    <details>
+      <summary>What fuel does it use?</summary>
+      <p>A small, sealed gasoline feed. The lines stay closed — nothing leaks, drips or pools, on a hot exhaust or anywhere else.</p>
+    </details>
+    <details>
+      <summary>Will it flame on its own, or catch fire?</summary>
+      <p>Only when you trigger it — a lift-off, a downshift, or the app. Parked with the engine off it's completely inert; there's no open flame sitting there waiting.</p>
+    </details>
+    <details>
+      <summary>Which cars does it fit?</summary>
+      <p>BMW F &amp; G series, with a plug-in harness made for them. Not sure about yours? Drop your model in the order form and we'll confirm.</p>
+    </details>
+    <details>
+      <summary>Can I control how big the flames are?</summary>
+      <p>Yes. Tune flame size, intensity and crackle from the app, save your setups and switch on the fly — from a subtle daily crackle to full send.</p>
+    </details>
+    <details>
+      <summary>Is it legal?</summary>
+      <p>Off-road and show use only. A flame kit may be illegal on public roads where you live — check your local laws and run it responsibly.</p>
+    </details>
+    <details>
+      <summary>How is it installed?</summary>
+      <p>It ships with the wiring harness and a step-by-step guide. Want it done for you? Professional installation by our team is GH₵ 2,000 — add it in the order form.</p>
+    </details>
   </div>
 </section>
 
@@ -296,10 +379,30 @@
         <li>Step-by-step install guide and support</li>
         <li>Delivery across Ghana</li>
       </ul>
-      <!-- EDIT: paste your Paystack Payment Page link between the quotes below -->
-      <a class="btn btn-flame" href="PASTE_PAYSTACK_LINK_HERE" target="_blank" rel="noopener">Pay deposit to reserve</a>
-      <a class="btn btn-line" href="https://wa.me/233206187456?text=Hi%20CM%20Performance%2C%20I%27m%20interested%20in%20the%20Flame%20Kit" target="_blank" rel="noopener">Or message us first</a>
-      <p class="note">Fits BMW F &amp; G series only · deposit secures your build · balance due on fitting</p>
+      <form id="orderForm" class="order-form" novalidate>
+        <input type="text" name="name" placeholder="Full name" autocomplete="name" required />
+        <input type="email" name="email" placeholder="Email — we'll send a code to verify" autocomplete="email" required />
+        <input type="tel" name="phone" placeholder="Phone — e.g. +233 20 618 7456" autocomplete="tel" required />
+        <input type="text" name="model" placeholder="Your BMW — e.g. F30 335i" required />
+        <textarea name="note" placeholder="Anything else? (optional)"></textarea>
+        <label class="check"><input type="checkbox" name="install" /> Add professional installation (GH₵ 2,000)</label>
+        <button type="submit" class="btn btn-flame" id="sendCodeBtn">Verify email &amp; reserve</button>
+      </form>
+
+      <div id="otpStep" hidden>
+        <p>Enter the code we emailed to <span id="otpDest" class="mono"></span>.</p>
+        <input id="otpCode" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="••••••••" />
+        <button class="btn btn-flame" id="verifyBtn">Confirm &amp; place order</button>
+        <button class="btn btn-line" id="resendBtn" type="button">Use a different email</button>
+      </div>
+
+      <div id="orderDone" class="order-done" hidden>
+        <h3 class="flame">Order placed 🔥</h3>
+        <p>Your number's verified and we've got your details. We'll reach out to confirm your build and delivery.</p>
+      </div>
+
+      <p id="orderStatus" class="form-status" role="status" aria-live="polite"></p>
+      <p class="note">Fits BMW F &amp; G series only · we confirm your build &amp; delivery after you order</p>
     </div>
 
     <div class="addon">
@@ -318,9 +421,8 @@
       <div class="links">
         <a href="#how">What it does</a>
         <a href="#specs">Specs</a>
+        <a href="#faq">FAQ</a>
         <a href="#order">Order</a>
-        <!-- EDIT: WhatsApp number -->
-        <a href="https://wa.me/233206287456" target="_blank" rel="noopener">WhatsApp</a>
         <a href="mailto:cmperformancegh@gmail.com">Email</a>
       </div>
       <a class="totop" href="#top">Back to top ↑</a>
@@ -388,6 +490,128 @@
   init();
   if (reduce) draw(); else loop();
 })();
+</script>
+<script type="module">
+/*
+  ORDERS — Supabase + EMAIL-OTP. People can only order through this form, and only
+  after verifying a real email (a 6-digit code), so every order is a human who put
+  in the effort. Email OTP uses Supabase's built-in email — NO Twilio, no paid SMS,
+  nothing extra to run. (The phone number is still collected as the contact.)
+
+  ONE-TIME SETUP in your Supabase project (https://supabase.com):
+    1. Project Settings → API: Project URL + publishable key are in the consts below.
+    2. Authentication → Email is ON by default. So the form shows a CODE (not a magic
+       link), edit the template: Authentication → Email Templates → "Magic Link" →
+       include the token, e.g.  Your Flame Link code is {{ .Token }}
+       (Built-in email is rate-limited — fine to launch on; add a free SMTP tier
+       like Resend later if volume grows. Still no SMS cost.)
+    3. The orders table + RLS live in a migration: supabase/migrations/*_create_orders.sql.
+       Apply it with:  supabase link --project-ref jmdqqgftsfmavwnbqitx  &&  supabase db push
+       (or paste that SQL in the dashboard SQL editor).
+
+  The publishable key is safe to ship in the page — RLS is what protects the table
+  (no one can read others' orders; you read them from the Supabase dashboard).
+*/
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+const SUPABASE_URL = 'https://jmdqqgftsfmavwnbqitx.supabase.co';       
+const SUPABASE_ANON_KEY = 'sb_publishable_HYkDj6F6n6byI8l76vh-VQ_s2hGFfFS';
+
+const form = document.getElementById('orderForm');
+const otpStep = document.getElementById('otpStep');
+const done = document.getElementById('orderDone');
+const statusEl = document.getElementById('orderStatus');
+const sendBtn = document.getElementById('sendCodeBtn');
+const verifyBtn = document.getElementById('verifyBtn');
+const resendBtn = document.getElementById('resendBtn');
+const otpCode = document.getElementById('otpCode');
+const otpDest = document.getElementById('otpDest');
+
+const configured = !SUPABASE_URL.includes('PASTE_') && !SUPABASE_ANON_KEY.includes('PASTE_');
+// One-shot order form: we only need the session long enough to verify the email
+// and insert the row. Don't persist it (no lingering auth/refresh loop on every
+// visitor who ever ordered). The in-memory session from verifyOtp still authorizes
+// the insert that immediately follows.
+const supabase = configured
+  ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: { persistSession: false, autoRefreshToken: false },
+    })
+  : null;
+let pending = null; // the order, held until the email is verified
+
+function setStatus(msg, kind) {
+  statusEl.textContent = msg || '';
+  statusEl.className = 'form-status' + (kind ? ' ' + kind : '');
+}
+function normPhone(v) {
+  v = v.trim().replace(/[\s\-()]/g, '');
+  if (v.startsWith('00')) v = '+' + v.slice(2);         // 00233… → +233…
+  else if (v.startsWith('0')) v = '+233' + v.slice(1);  // local 0… → +233…
+  else if (/^233/.test(v)) v = '+' + v;                 // 233… → +233…
+  return v;
+}
+
+if (!configured) {
+  setStatus('Ordering isn’t switched on yet — check back shortly.', 'err');
+  if (sendBtn) sendBtn.disabled = true;
+}
+
+form?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if (!supabase) return;
+  const d = new FormData(form);
+  const name = (d.get('name') || '').toString().trim();
+  const email = (d.get('email') || '').toString().trim();
+  const phone = normPhone((d.get('phone') || '').toString());
+  const model = (d.get('model') || '').toString().trim();
+  const note = (d.get('note') || '').toString().trim();
+  const install = d.get('install') === 'on';
+
+  if (!name || !model) { setStatus('Please add your name and your BMW model.', 'err'); return; }
+  if (!/^\S+@\S+\.\S+$/.test(email)) { setStatus('Enter a valid email — that is where your code goes.', 'err'); return; }
+  if (!/^\+\d{8,15}$/.test(phone)) { setStatus('Enter a valid phone with country code, e.g. +233…', 'err'); return; }
+
+  pending = { name, email, phone, model, note, install };
+  sendBtn.disabled = true;
+  setStatus('Emailing you a code…');
+  const { error } = await supabase.auth.signInWithOtp({ email });
+  sendBtn.disabled = false;
+  if (error) { setStatus(error.message || 'Could not send the code — try again.', 'err'); return; }
+
+  otpDest.textContent = email;
+  form.hidden = true;
+  otpStep.hidden = false;
+  setStatus('');
+  otpCode.focus();
+});
+
+verifyBtn?.addEventListener('click', async () => {
+  if (!supabase || !pending) return;
+  const token = otpCode.value.trim();
+  if (!/^\d{4,8}$/.test(token)) { setStatus('Enter the code we emailed you.', 'err'); return; }
+  verifyBtn.disabled = true;
+  setStatus('Verifying…');
+  const { error: vErr } = await supabase.auth.verifyOtp({ email: pending.email, token, type: 'email' });
+  if (vErr) { verifyBtn.disabled = false; setStatus(vErr.message || 'That code didn’t work — try again.', 'err'); return; }
+
+  const { error: iErr } = await supabase.from('orders').insert({
+    name: pending.name, phone: pending.phone, email: pending.email,
+    model: pending.model, install: pending.install, note: pending.note || null,
+  });
+  verifyBtn.disabled = false;
+  if (iErr) { setStatus(iErr.message || 'Verified, but the order didn’t save — try again.', 'err'); return; }
+
+  otpStep.hidden = true;
+  done.hidden = false;
+  setStatus('');
+});
+
+resendBtn?.addEventListener('click', () => {
+  otpStep.hidden = true;
+  form.hidden = false;
+  otpCode.value = '';
+  setStatus('');
+});
 </script>
 </body>
 </html>
