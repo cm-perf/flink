@@ -205,6 +205,42 @@
   .faq details[open] summary::after { content: '–'; }
   .faq details p { font-size: 13px; color: var(--dim); line-height: 1.65; padding: 0 0 18px; max-width: 64ch; }
 
+  /* batch / lead-time banner */
+  .batch-banner {
+    max-width: 760px; margin: 0 auto 36px; background: var(--surface);
+    border: 1px solid var(--border); border-left: 3px solid var(--flame);
+    border-radius: 8px; padding: 16px 20px; font-size: 13px; color: var(--dim); line-height: 1.6;
+  }
+  .batch-banner strong { color: var(--text); }
+
+  /* cost-comparison — "do the math" (mobile-first cards, 4-up on desktop) */
+  .tco-intro { color: var(--dim); font-size: 14px; max-width: 62ch; margin: -6px 0 24px; line-height: 1.6; }
+  .tco-cards { display: grid; grid-template-columns: 1fr; gap: 14px; }
+  @media (min-width: 640px)  { .tco-cards { grid-template-columns: repeat(2, 1fr); gap: 18px; align-items: start; } }
+  @media (min-width: 1100px) { #cost .wrap { max-width: 1440px; } .tco-cards { grid-template-columns: repeat(4, 1fr); gap: 20px; } }
+  .tco-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px 24px 16px; position: relative; }
+  .tco-save { position: absolute; top: 12px; right: 12px; width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; padding: 0; background: var(--elevated); border: 1px solid var(--border-hi); border-radius: 7px; color: var(--dim); cursor: pointer; transition: color .15s, border-color .15s; }
+  .tco-save:hover { color: var(--flame); border-color: rgba(232,93,4,.45); }
+  .tco-save:disabled { opacity: .45; cursor: default; }
+  .tco-save svg { width: 15px; height: 15px; }
+  .tco-card.fl { border-color: rgba(232,93,4,.45); background: rgba(232,93,4,.05); }
+  .tco-badge { display: inline-block; background: var(--flame); color: #0a0a0a; font-size: 9px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; margin-bottom: 10px; }
+  .tco-name { font-size: 14px; font-weight: 700; color: var(--text); }
+  .tco-sub { font-size: 11px; color: var(--dim); margin-top: 2px; }
+  .tco-card.fl .tco-sub { color: var(--flame); }
+  .tco-allin { margin: 14px 0 2px; font-size: 10px; color: var(--dim); letter-spacing: .6px; text-transform: uppercase; }
+  .tco-allin b { display: block; font-size: 23px; font-weight: 800; color: var(--text); letter-spacing: -.02em; margin-top: 3px; }
+  .tco-card.fl .tco-allin b { color: var(--flame); }
+  .tco-allin small { display: block; font-size: 11px; font-weight: 600; text-transform: none; letter-spacing: 0; color: #e74c3c; margin-top: 4px; }
+  .tco-rows { list-style: none; margin: 12px 0 0; padding: 0; }
+  .tco-rows li { padding: 10px 0; border-top: 1px solid var(--border); }
+  .tco-rows .k { display: block; color: var(--dim); font-size: 10.5px; letter-spacing: .4px; text-transform: uppercase; margin-bottom: 4px; }
+  .tco-rows .v { display: block; color: var(--text); font-size: 13.5px; font-weight: 600; line-height: 1.45; }
+  .tco-rows .v.yes { color: #2ecc71; }
+  .tco-rows .v.no  { color: #e74c3c; }
+  .tco-rows .v.warn { color: #e8a020; }
+  .tco-note { font-size: 11px; color: var(--muted); margin: 18px auto 0; line-height: 1.6; max-width: 90ch; text-align: center; }
+
   /* order */
   .order-card {
     max-width: 440px; margin: 0 auto; text-align: center; position: relative; overflow: hidden;
@@ -354,7 +390,7 @@
           <a class="btn btn-line" href="#why">Why not just tune it?</a>
         </div>
         <span class="tag">Standalone · no engine mods</span>
-        <span class="tag">BMW F &amp; G today · more cars soon</span>
+        <span class="tag">BMW F &amp; G series · more cars soon</span>
       </div>
 
       <div class="hero-visual">
@@ -419,6 +455,89 @@
   </div>
 </section>
 
+<section id="cost">
+  <div class="wrap">
+    <div class="sec-label">
+      <span class="label">Do the math</span>
+      <h2>What flames actually cost on an F &amp; G series.</h2>
+    </div>
+    <p class="tco-intro">Chasing flames through a tune means paying to <strong>unlock your locked ECU first</strong>, then a tuning licence on top — and you still only get crackle, not a torch. The cheap bolt-on kits can't fire on a modern BMW at all. Here's the honest line-item.</p>
+
+    <div class="tco-cards">
+
+      <div class="tco-card">
+        <button class="tco-save" type="button" aria-label="Save card as image" title="Save as image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+        <div class="tco-name">Flash tune — OTS map</div>
+        <div class="tco-sub">Bootmod3 / MHD</div>
+        <div class="tco-allin">All-in to get flames<b>$1,500–$2,150+</b></div>
+        <ul class="tco-rows">
+          <li><span class="k">Tuning licence</span><span class="v">~$595</span></li>
+          <li><span class="k">Unlock ECU first (F &amp; G series)</span><span class="v warn">$500–$850</span></li>
+          <li><span class="k">Supporting hardware</span><span class="v warn">Downpipe for real pops · ~$400–$700</span></li>
+          <li><span class="k">What you get</span><span class="v">Crackle &amp; pops — not a torch</span></li>
+          <li><span class="k">Fires on a modern F &amp; G series?</span><span class="v warn">Limited — DME caps it</span></li>
+          <li><span class="k">Automatic?</span><span class="v yes">✓ On overrun</span></li>
+          <li><span class="k">Touches engine / DME?</span><span class="v no">Yes — reflashes the ECU</span></li>
+          <li><span class="k">Warranty &amp; resale</span><span class="v no">High risk</span></li>
+        </ul>
+      </div>
+
+      <div class="tco-card">
+        <button class="tco-save" type="button" aria-label="Save card as image" title="Save as image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+        <div class="tco-name">Custom dyno tune</div>
+        <div class="tco-sub">Tuner + dyno time</div>
+        <div class="tco-allin">All-in to get flames<b>$3,000–$4,200+</b></div>
+        <ul class="tco-rows">
+          <li><span class="k">Tune + dyno</span><span class="v">$899–$1,199</span></li>
+          <li><span class="k">Unlock ECU first (F &amp; G series)</span><span class="v warn">$500–$850</span></li>
+          <li><span class="k">Supporting hardware</span><span class="v warn">Downpipe + intercooler + charge pipe · ~$1,000–$1,500</span></li>
+          <li><span class="k">What you get</span><span class="v">Dialled-in crackle &amp; pops</span></li>
+          <li><span class="k">Fires on a modern F &amp; G series?</span><span class="v warn">Limited — DME caps it</span></li>
+          <li><span class="k">Automatic?</span><span class="v yes">✓ On overrun</span></li>
+          <li><span class="k">Touches engine / DME?</span><span class="v no">Yes — reflashes the ECU</span></li>
+          <li><span class="k">Warranty &amp; resale</span><span class="v no">High risk</span></li>
+        </ul>
+      </div>
+
+      <div class="tco-card">
+        <button class="tco-save" type="button" aria-label="Save card as image" title="Save as image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+        <div class="tco-name">Off-the-shelf flame kit</div>
+        <div class="tco-sub">Hot Licks · PerTronix · Speedway</div>
+        <div class="tco-allin">Sticker price<b>$58–$220</b><small>…but won't fire on your BMW</small></div>
+        <ul class="tco-rows">
+          <li><span class="k">Unlock / licence</span><span class="v">— none</span></li>
+          <li><span class="k">Supporting hardware</span><span class="v">— none</span></li>
+          <li><span class="k">What you get</span><span class="v">Flames… on carb / older cars</span></li>
+          <li><span class="k">Fires on a modern F &amp; G series?</span><span class="v no">✕ No — the DME kills the fuel</span></li>
+          <li><span class="k">Automatic?</span><span class="v no">✕ Manual switch</span></li>
+          <li><span class="k">Touches engine / DME?</span><span class="v">No</span></li>
+          <li><span class="k">Warranty &amp; resale</span><span class="v">Low risk</span></li>
+        </ul>
+      </div>
+
+      <div class="tco-card fl">
+        <button class="tco-save" type="button" aria-label="Save card as image" title="Save as image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+        <span class="tco-badge">★ The pick</span>
+        <div class="tco-name">Flame Link</div>
+        <div class="tco-sub">This kit</div>
+        <div class="tco-allin">All-in<b>$650</b></div>
+        <ul class="tco-rows">
+          <li><span class="k">Unlock / licence</span><span class="v yes">None</span></li>
+          <li><span class="k">Supporting hardware</span><span class="v yes">None — bolts to the tip</span></li>
+          <li><span class="k">What you get</span><span class="v yes">Real exhaust torch flames</span></li>
+          <li><span class="k">Fires on a modern F &amp; G series?</span><span class="v yes">✓ Yes</span></li>
+          <li><span class="k">Automatic?</span><span class="v yes">✓ On overrun, upshifts &amp; full sends</span></li>
+          <li><span class="k">Touches engine / DME?</span><span class="v yes">Never</span></li>
+          <li><span class="k">Warranty &amp; resale</span><span class="v yes">None — fully reversible</span></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <p class="tco-note">Tuning figures are typical US retail and vary by engine, model year and region. Locked Bosch DMEs (most BMW / MINI built from ~2019 — M140i, M340i, M2/M3/M4 and up) must be bench-unlocked before any OBD tune: pre-2020 ~$500, FEMTO unlock for 2021+ ~$850. "Pops &amp; bangs" maps retard timing and dump fuel for an off-road crackle — they do not produce a sustained exhaust torch on a modern fuel-cut DME. And a tune doesn't run on its own: a real Stage 2 needs a downpipe, intercooler and charge pipe (~$1,000–$1,500) to run safely, and a downpipe is what makes overrun pops actually loud — so the sticker price is never the real price. Flame Link injects its own fuel and spark downstream in the exhaust, so it bolts to the tip and never touches your engine, ECU, or warranty.</p>
+  </div>
+</section>
+
 <section id="bmw">
   <div class="wrap">
     <div class="sec-label">
@@ -476,7 +595,7 @@
     </details>
     <details>
       <summary>How is it installed?</summary>
-      <p>It ships with the wiring harness and a step-by-step guide. Want it done for you? Professional installation by our team is GH₵ 2,000 — add it in the order form.</p>
+      <p>It ships with the wiring harness and a step-by-step guide. Want it done for you? Professional installation by our team is $150 — add it in the order form.</p>
     </details>
   </div>
 </section>
@@ -498,13 +617,13 @@
       <div class="step-item">
         <div class="step-num">2</div>
         <h4>We reach out</h4>
-        <p>Confirm your build, answer questions, schedule delivery.</p>
+        <p>Confirm your build, answer questions, and give you a timeline.</p>
       </div>
       <span class="step-arrow">→</span>
       <div class="step-item">
         <div class="step-num">3</div>
         <h4>Build &amp; ship</h4>
-        <p>We build your kit and ship or schedule installation.</p>
+        <p>Your kit is built in the next batch, then shipped or installed.</p>
       </div>
       <span class="step-arrow">→</span>
       <div class="step-item">
@@ -514,20 +633,25 @@
       </div>
     </div>
 
+    <div class="batch-banner">
+      <strong>Built to order, in small batches.</strong> Every kit is hand-assembled and bench-tested before it ships, so new orders join the next production batch — expect a lead time rather than same-day delivery. Reserve now to lock your place in the queue; we'll confirm your exact timeline the moment we reach out.
+    </div>
+
     <div class="offers">
       <div class="order-card">
         <span class="badge now">Ready now</span>
-        <span class="label">Complete kit · BMW F &amp; G</span>
-        <div class="price"><small>Starts at</small>GH₵ 8,000</div>
+        <span class="label">Complete kit · BMW F &amp; G series</span>
+        <div class="price"><small>Starts at</small>$650</div>
+        <div class="price-note" style="font-size:11px;color:var(--muted);margin-top:6px;">Priced in USD · payable in cedis at the day's rate</div>
         <ul class="incl">
           <li>Fuel Delivery &amp; Ignition module + plug-in harness</li>
           <li>Standalone — no engine mods, fully reversible</li>
           <li>The app — tune every flame stage</li>
           <li>Android Auto app (optional) — monitor your car in real-time, control accessories like underglows &amp; interior lighting, or anything you dream up</li>
-          <li>Install guide &amp; support · pro fitting from GH₵ 2,000</li>
+          <li>Install guide &amp; support · pro fitting from $150</li>
           <li>Delivery across Ghana</li>
         </ul>
-        <a class="btn btn-flame offer-cta" data-kind="BMW F&amp;G (ready-made)" href="#reserve">Order Now — GH₵ 8,000</a>
+        <a class="btn btn-flame offer-cta" data-kind="BMW F &amp; G series (ready-made)" href="#reserve">Order Now — $650</a>
       </div>
 
       <div class="order-card req-card">
@@ -550,7 +674,7 @@
       <span class="label" id="reserveLabel">Order Your Flame Link</span>
       <form id="orderForm" class="order-form" novalidate>
         <select name="kind" id="orderKind" aria-label="What are you after?">
-          <option value="BMW F&amp;G (ready-made)">Flame Link for BMW F &amp; G — GH₵ 8,000</option>
+          <option value="BMW F &amp; G series (ready-made)">Flame Link for BMW F &amp; G series — $650</option>
           <option value="Custom build">Custom build — other car or special request</option>
         </select>
         <input type="text" name="name" placeholder="Full name" autocomplete="name" required />
@@ -558,7 +682,7 @@
         <input type="tel" name="phone" placeholder="Phone — e.g. +233 20 618 7456" autocomplete="tel" required />
         <input type="text" name="model" placeholder="Your car — e.g. F30 335i" required />
         <textarea name="note" placeholder="For a custom build, tell us the car and what you want (optional)"></textarea>
-        <label class="check"><input type="checkbox" name="install" /> Add professional installation (GH₵ 2,000)</label>
+        <label class="check"><input type="checkbox" name="install" /> Add professional installation ($150)</label>
         <div class="cf-turnstile" data-sitekey="0x4AAAAAADrBTjHpERpNTuz8" data-size="invisible" id="turnstileWidget"></div>
         <button type="submit" class="btn btn-flame" id="sendCodeBtn">Verify &amp; Place Order</button>
       </form>
@@ -571,7 +695,7 @@
       </div>
 
       <p id="orderStatus" class="form-status" role="status" aria-live="polite"></p>
-      <p class="note">BMW F &amp; G ready now · any other car by custom request · standalone, won't touch your engine</p>
+      <p class="note">BMW F &amp; G series ready now · built in batches, so there may be a wait · any other car by custom request · won't touch your engine</p>
     </div>
   </div>
 </section>
@@ -580,8 +704,6 @@
   <div class="wrap">
     <div class="foot-row">
       <div class="links">
-        <a href="#how">What it does</a>
-        <a href="#specs">Specs</a>
         <a href="#faq">FAQ</a>
         <a href="#order">Order</a>
         <a href="privacy.html">Privacy</a>
@@ -603,7 +725,7 @@
     <path d="M44 8L24 44h14l-4 30 28-38H43l4-30z" fill="url(#bolt)" opacity="0.9"/>
   </svg>
   <h1>Thank you</h1>
-  <p>We'll get in touch soon.</p>
+  <p>Your order's in. We build in small batches, so there may be a short wait — we'll be in touch with your timeline soon.</p>
   <button class="btn btn-line" id="backHomeBtn">Back to home</button>
 </div>
 
@@ -887,6 +1009,61 @@ resendBtn?.addEventListener('click', () => {
 document.getElementById('backHomeBtn')?.addEventListener('click', () => {
   location.href = '/';
 });
+</script>
+
+<!-- Save a comparison card as a clean PNG for socials (html2canvas, lazy-loaded on first click) -->
+<script>
+(function () {
+  function cardFilename(card) {
+    if (card.classList.contains('fl')) return 'flame-link.png';
+    var n = card.querySelector('.tco-name');
+    var base = (n ? n.textContent : 'card').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    return 'flame-link-vs-' + base + '.png';
+  }
+
+  function load(src) {
+    return new Promise(function (resolve, reject) {
+      if (window.html2canvas) return resolve();
+      var s = document.createElement('script');
+      s.src = src; s.crossOrigin = 'anonymous';
+      s.onload = resolve; s.onerror = reject;
+      document.head.appendChild(s);
+    });
+  }
+
+  function capture(card, btn) {
+    var bg = getComputedStyle(document.body).backgroundColor || '#000';
+    return window.html2canvas(card, {
+      backgroundColor: bg,
+      scale: Math.min(3, (window.devicePixelRatio || 1) * 2),
+      useCORS: true,
+      ignoreElements: function (el) { return el.classList && el.classList.contains('tco-save'); }
+    }).then(function (canvas) {
+      return new Promise(function (resolve) {
+        canvas.toBlob(function (blob) {
+          var url = URL.createObjectURL(blob);
+          var a = document.createElement('a');
+          a.href = url; a.download = cardFilename(card);
+          document.body.appendChild(a); a.click(); a.remove();
+          setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
+          resolve();
+        }, 'image/png');
+      });
+    });
+  }
+
+  document.querySelectorAll('.tco-save').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var card = btn.closest('.tco-card');
+      if (!card || btn.disabled) return;
+      btn.disabled = true;
+      load('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js')
+        .then(function () { return capture(card, btn); })
+        .catch(function () {})
+        .then(function () { btn.disabled = false; });
+    });
+  });
+})();
 </script>
 </body>
 </html>
