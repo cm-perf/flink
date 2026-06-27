@@ -402,6 +402,7 @@
 <script>
 (function(){
   var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  slides.forEach(function(s, idx){ s.id = 's' + (idx + 1); }); // anchor each slide → #s1 … #s16
   var prev = document.getElementById('prev'), next = document.getElementById('next'), count = document.getElementById('count');
   var i = 0;
   function show(n){
@@ -411,6 +412,12 @@
     prev.disabled = (i === 0);
     next.disabled = (i === slides.length - 1);
     count.textContent = (i + 1) + ' / ' + slides.length;
+    // reflect the current slide in the URL so "Share" sends this exact page
+    var hash = '#s' + (i + 1);
+    if (location.hash !== hash) {
+      if (history.replaceState) history.replaceState(null, '', hash);
+      else location.hash = hash;
+    }
   }
   prev.addEventListener('click', function(){ show(i - 1); });
   next.addEventListener('click', function(){ show(i + 1); });
@@ -427,7 +434,9 @@
     if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) { show(dx < 0 ? i + 1 : i - 1); }
     x0 = null; y0 = null;
   }, {passive:true});
-  show(0);
+  function slideFromHash(){ var m = (location.hash || '').match(/^#s(\d+)$/); return m ? parseInt(m[1], 10) - 1 : 0; }
+  window.addEventListener('hashchange', function(){ show(slideFromHash()); });
+  show(slideFromHash());
 })();
 </script>
 </body>
