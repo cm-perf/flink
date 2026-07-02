@@ -94,36 +94,86 @@
     width: 760px; height: 760px; max-width: 92vw;
     background: radial-gradient(circle, rgba(232,93,4,.18), transparent 60%);
   }
-  .hrow { position: relative; width: 100%; }
-  .hero-copy { position: relative; z-index: 1; }
+  .hrow { display: flex; align-items: center; gap: 48px; width: 100%; }
+  .hero-copy { flex: 1; min-width: 0; }
   .hero .eyebrow {
     display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: 4px;
     text-transform: uppercase; color: var(--flame); margin-bottom: 22px;
   }
-  .hero h1 { font-size: clamp(32px, 7vw, 72px); font-weight: 800; letter-spacing: -.04em; line-height: 1.05; }
-  .hero p { color: var(--dim); font-size: clamp(15px, 1.7vw, 17px); line-height: 1.7; max-width: 560px; margin: 26px 0 34px; }
-  .hero .ctas { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 30px; }
-  .hero-visual {
-    position: absolute; right: -20px; top: 50%; transform: translateY(-50%);
-    width: clamp(160px, 22vw, 280px); opacity: 0.22; pointer-events: none; z-index: 0;
-    display: flex; justify-content: center;
+  .hero h1 { font-size: clamp(26px, 5vw, 54px); font-weight: 800; letter-spacing: -.04em; line-height: 1.05; }
+  .hero p { color: var(--dim); font-size: clamp(14px, 1.6vw, 16px); line-height: 1.7; max-width: 480px; margin: 22px 0 30px; }
+  .hero .ctas { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 28px; }
+
+  /* Hero video pod */
+  .hero-vid {
+    flex-shrink: 0;
+    height: clamp(300px, 62vh, 520px);
+    aspect-ratio: 9/16;
+    border-radius: 18px; overflow: hidden; position: relative; z-index: 0;
+    box-shadow: 0 0 70px rgba(232,93,4,.28), 0 0 160px rgba(232,93,4,.1);
   }
-  .hero-visual svg { width: 100%; height: auto; }
-  @keyframes flicker {
-    0%, 100% { transform: scaleX(1) scaleY(1) translateY(0); }
-    25% { transform: scaleX(.97) scaleY(1.02) translateY(-5px); }
-    50% { transform: scaleX(1.02) scaleY(.99) translateY(-2px); }
-    75% { transform: scaleX(.98) scaleY(1.01) translateY(-7px); }
+  .hero-vid video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .promo-overlay {
+    position: absolute; inset: 0; z-index: 1;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 14px; cursor: pointer;
+    background: rgba(0,0,0,.3); transition: background .2s;
   }
-  .flame-svg { animation: flicker 5s ease-in-out infinite; transform-origin: 50% 88%; }
+  .promo-overlay:hover { background: rgba(0,0,0,.15); }
+  .promo-overlay.hidden { display: none; }
+  .play-btn {
+    width: 68px; height: 68px; border-radius: 50%; border: none;
+    background: var(--flame); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 30px rgba(232,93,4,.6);
+    transition: transform .15s, box-shadow .15s;
+  }
+  .play-btn:hover { transform: scale(1.1); box-shadow: 0 0 48px rgba(232,93,4,.8); }
+  .play-btn svg { width: 26px; height: 26px; fill: #000; margin-left: 3px; }
+  .play-hint { font-size: 11px; color: rgba(255,255,255,.4); letter-spacing: 1px; }
+
+  /* Mini sticky player */
+  .hero-vid.mini {
+    position: fixed; bottom: 24px; right: 20px; z-index: 98;
+    height: 210px; aspect-ratio: 9/16;
+    border-radius: 12px;
+    box-shadow: 0 8px 40px rgba(0,0,0,.55), 0 0 20px rgba(232,93,4,.2);
+    animation: miniSlideIn .3s cubic-bezier(.22,1,.36,1);
+  }
+  @keyframes miniSlideIn {
+    from { transform: translateX(120%) scale(.85); opacity: 0; }
+    to   { transform: translateX(0)   scale(1);    opacity: 1; }
+  }
+  .hero-vid.mini .play-btn { width: 36px; height: 36px; box-shadow: none; }
+  .hero-vid.mini .play-btn svg { width: 14px; height: 14px; }
+  .hero-vid.mini .play-hint { display: none; }
+  /* overlay must not swallow clicks in mini mode — close button sits above it */
+  .hero-vid.mini .promo-overlay { pointer-events: none; }
+
+  /* Close button — fixed, sits above the mini player (outside the video container) */
+  .vid-close {
+    display: none;
+    position: fixed;
+    /* top-right corner of the mini player: bottom 24+210-7-22=205, right 20+7=27 */
+    bottom: 205px; right: 27px;
+    z-index: 200;
+    width: 24px; height: 24px; border-radius: 50%; border: none;
+    background: rgba(0,0,0,.82); color: #fff;
+    font-size: 15px; line-height: 1; cursor: pointer;
+    align-items: center; justify-content: center;
+    transition: background .15s;
+  }
+  .vid-close:hover { background: rgba(0,0,0,.95); }
+  .vid-close.visible { display: flex; }
+
   @media (max-width: 860px) {
     .hero { min-height: 0; padding: 56px 0 64px; text-align: center; }
-    .hero h1 { font-size: 7vw; }
-    .hero-visual { position: relative; top: auto; transform: none; right: auto; width: 180px; margin: 0 auto 24px; opacity: 1; }
+    .hrow { flex-direction: column; gap: 28px; }
+    .hero h1 { font-size: clamp(26px, 7.5vw, 40px); }
     .hero p { margin-left: auto; margin-right: auto; }
     .hero .ctas { justify-content: center; }
+    .hero-vid { height: auto; width: clamp(160px, 52vw, 240px); }
   }
-  @media (prefers-reduced-motion: reduce) { .flame-svg { animation: none; } }
 
   /* sections */
   section { padding: 64px 0; border-top: 1px solid var(--border); }
@@ -385,30 +435,6 @@
 <section class="hero" style="border-top:0">
   <div class="wrap">
     <div class="hrow">
-      <div class="hero-visual">
-        <svg class="flame-svg" viewBox="0 0 300 500" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <circle cx="150" cy="280" r="195" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
-          <circle cx="150" cy="280" r="148" stroke="rgba(255,255,255,0.025)" stroke-width="1"/>
-          <path d="M150 470 C84 432 40 364 52 278 C62 204 106 232 120 172 C128 140 120 96 132 60 C138 40 146 20 152 8 C157 22 162 44 160 68 C157 96 148 116 156 138 C164 160 186 142 198 168 C214 200 220 250 214 296 C206 348 188 406 150 470Z" fill="url(#g_outer)" opacity="0.24"/>
-          <path d="M150 452 C104 412 76 348 88 272 C98 208 134 232 144 184 C150 156 144 120 152 90 C155 104 158 122 156 144 C154 166 148 182 155 202 C162 222 182 206 188 228 C198 262 200 308 192 346 C182 388 166 424 150 452Z" fill="url(#g_mid)" opacity="0.65"/>
-          <path d="M150 428 C120 388 110 340 120 288 C128 248 150 266 156 232 C160 250 164 268 162 288 C160 308 154 322 160 340 C166 358 180 346 182 366 C184 388 172 412 150 428Z" fill="url(#g_inner)" opacity="0.92"/>
-          <path d="M150 400 C134 370 130 332 140 298 C146 276 155 288 157 268 C161 284 163 302 161 320 C159 338 153 350 157 364 C161 376 169 368 169 382 C169 396 158 408 150 400Z" fill="#fff" opacity="0.6"/>
-          <ellipse cx="150" cy="458" rx="92" ry="20" fill="#e85d04" opacity="0.12"/>
-          <ellipse cx="150" cy="462" rx="56" ry="12" fill="#ffaa00" opacity="0.1"/>
-          <defs>
-            <linearGradient id="g_outer" x1="150" y1="8" x2="150" y2="470" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#ff9500"/><stop offset="55%" stop-color="#e85d04"/><stop offset="100%" stop-color="#c0392b" stop-opacity="0"/>
-            </linearGradient>
-            <linearGradient id="g_mid" x1="150" y1="90" x2="150" y2="452" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#ffdd00"/><stop offset="45%" stop-color="#ff7700"/><stop offset="100%" stop-color="#e85d04" stop-opacity="0.1"/>
-            </linearGradient>
-            <linearGradient id="g_inner" x1="150" y1="232" x2="150" y2="428" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#fffbe0"/><stop offset="35%" stop-color="#ffcc44"/><stop offset="100%" stop-color="#ff5500" stop-opacity="0.25"/>
-            </linearGradient>
-          </defs>
-        </svg>
-      </div>
-
       <div class="hero-copy">
         <span class="eyebrow">Flame Link — 100% Standalone</span>
         <h1>Real exhaust flames.<br><span class="flame">No ECU. No engine mods.</span></h1>
@@ -419,6 +445,18 @@
         </div>
         <span class="tag">Standalone · no engine mods · fully reversible</span>
         <span class="tag">BMW F &amp; G series · more cars soon</span>
+      </div>
+
+      <div class="hero-vid" id="heroVid">
+        <video id="promoVid" preload="none" poster="promo/poster.jpg" playsinline loop>
+          <source src="promo/run_001_web.mp4" type="video/mp4">
+        </video>
+        <div class="promo-overlay" id="promoOverlay">
+          <button class="play-btn" aria-label="Play flame video">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          </button>
+          <span class="play-hint">~22 MB · tap to load</span>
+        </div>
       </div>
     </div>
   </div>
@@ -710,6 +748,54 @@
   if (reduce) draw(); else loop();
 })();
 </script>
+<script>
+(function () {
+  var overlay = document.getElementById('promoOverlay');
+  var vid = document.getElementById('promoVid');
+  if (!overlay || !vid) return;
+  overlay.addEventListener('click', function () {
+    overlay.classList.add('hidden');
+    vid.play();
+  });
+  vid.addEventListener('ended', function () {
+    if (!vid.loop) overlay.classList.remove('hidden');
+  });
+})();
+
+/* Mini sticky player */
+(function () {
+  var pod      = document.getElementById('heroVid');
+  var closeBtn = document.getElementById('vidClose');
+  var hero     = document.querySelector('.hero');
+  if (!pod || !closeBtn || !hero) return;
+
+  var dismissed = false;
+
+  function setMini(on) {
+    pod.classList.toggle('mini', on);
+    closeBtn.classList.toggle('visible', on);
+  }
+
+  function update() {
+    if (dismissed) return;
+    setMini(hero.getBoundingClientRect().bottom < 0);
+  }
+
+  window.addEventListener('scroll', update, { passive: true });
+
+  closeBtn.addEventListener('click', function () {
+    dismissed = true;
+    pod.style.transition = 'opacity .2s, transform .2s';
+    pod.style.opacity = '0';
+    pod.style.transform = 'translateX(30px) scale(.9)';
+    closeBtn.classList.remove('visible');
+    setTimeout(function () {
+      pod.classList.remove('mini');
+      pod.style.cssText = '';
+    }, 220);
+  });
+})();
+</script>
 <script type="module">
 /*
   ORDERS — Supabase + EMAIL-OTP. Every order is from a human who verified a real
@@ -987,5 +1073,6 @@ document.getElementById('backHomeBtn')?.addEventListener('click', () => {
   });
 })();
 </script>
+<button class="vid-close" id="vidClose" aria-label="Close video">×</button>
 </body>
 </html>
