@@ -732,6 +732,42 @@
 <script>document.getElementById('yr').textContent = new Date().getFullYear();</script>
 
 <script>
+/* ── Analytics: Microsoft Clarity (free, unlimited) ──────────────────────────
+   Recordings + scroll heatmaps + the custom events fired around the page
+   (video plays, section views, order funnel). Loads ONLY when a project ID
+   is set — create one at clarity.microsoft.com and paste it below. */
+var CLARITY_ID = ''; // e.g. 'abc123xyz'
+if (CLARITY_ID) {
+  (function (c, l, a, r, i, t, y) {
+    c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments); };
+    t = l.createElement(r); t.async = 1; t.src = 'https://www.clarity.ms/tag/' + i;
+    y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+  })(window, document, 'clarity', 'script', CLARITY_ID);
+}
+/* Safe no-op event helper — usable everywhere, harmless when analytics is off */
+window.trackEvent = function (name) {
+  try { if (window.clarity) window.clarity('event', name); } catch (_) {}
+};
+
+/* Section-view tracking: which parts of the page people actually reach */
+document.addEventListener('DOMContentLoaded', function () {
+  var seen = {};
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting && !seen[e.target.id]) {
+        seen[e.target.id] = true;
+        window.trackEvent('seen_' + e.target.id);
+      }
+    });
+  }, { threshold: 0.4 });
+  ['runs', 'faq', 'why', 'bmw', 'order'].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) obs.observe(el);
+  });
+});
+</script>
+
+<script>
 /* Flame starlight — embers drift up and twinkle behind the page */
 (function () {
   var canvas = document.getElementById('embers');
@@ -796,6 +832,7 @@
   overlay.addEventListener('click', function () {
     overlay.classList.add('hidden');
     vid.play();
+    window.trackEvent('video_hero_play');
   });
   vid.addEventListener('ended', function () {
     if (!vid.loop) overlay.classList.remove('hidden');
@@ -821,7 +858,7 @@
   vids.forEach(function (vid) {
     vid.addEventListener('click', function () {
       vid.muted = !vid.muted;
-      if (!vid.muted) vid.play().catch(function () {});
+      if (!vid.muted) { vid.play().catch(function () {}); window.trackEvent('run_video_unmuted'); }
       var hint = vid.parentElement.querySelector('.sound-hint');
       if (hint) hint.textContent = vid.muted ? '🔊 tap for sound' : '🔇 tap to mute';
     });
@@ -1077,8 +1114,10 @@ form?.addEventListener('submit', async (e) => {
   //   2. its mail server must not be a known domain-parking catch-all
   //      (parked domains happily accept DNS and bounce every message).
   // Fails OPEN on lookup errors — a blocked resolver must never cost an order.
+  window.trackEvent?.('order_attempt');
   setStatus('Checking your email…');
   if (!(await emailDomainLooksReal(email))) {
+    window.trackEvent?.('order_email_rejected');
     setStatus("That email address can't receive mail — double-check it. Your order code goes there.", 'err');
     return;
   }
@@ -1093,6 +1132,7 @@ form?.addEventListener('submit', async (e) => {
   setStatus('Emailing you a code…');
   const { error } = await supabase.auth.signInWithOtp({ email });
   if (error) { sendBtn.disabled = false; setStatus(error.message || 'Could not send the code — try again.', 'err'); return; }
+  window.trackEvent?.('order_otp_sent');
 
   // Security check 3: 60s cooldown on re-send
   cooldownBtn(60);
@@ -1122,6 +1162,7 @@ verifyBtn?.addEventListener('click', async () => {
   verifyBtn.disabled = false;
   if (iErr) { setStatus(iErr.message || 'Verified, but the order didn’t save — try again.', 'err'); return; }
 
+  window.trackEvent?.('order_completed');
   otpStep.hidden = true;
   document.getElementById('mainContent').hidden = true;
   document.getElementById('thankyou').hidden = false;
