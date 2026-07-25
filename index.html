@@ -167,6 +167,29 @@ document.addEventListener('DOMContentLoaded', function () {
   .play-btn svg { width: 26px; height: 26px; fill: #000; margin-left: 3px; }
   .play-hint { font-size: 11px; color: rgba(255,255,255,.4); letter-spacing: 1px; }
 
+  /* ── Hero flame chaos (desktop/tablet ≥861px): three runs burning at once ──
+     Mobile keeps the single tap-to-load hero + the runs section below. */
+  .hero-vids { display: flex; align-items: center; flex-shrink: 0; }
+  .chaos-pod, .chaos-hint { display: none; }
+  @media (min-width: 861px) {
+    /* Chaos mode earns a wider stage: the hero band (and the nav above it)
+       stretch out while text sections keep their comfortable reading width. */
+    .hero .wrap, .top-nav { max-width: 1360px; }
+    .hrow { gap: clamp(32px, 4vw, 64px); }
+    .hero::before { width: 900px; height: 900px; }
+    /* Pods scale with viewport WIDTH (vh sizing blew up on tall/narrow
+       tablets and crushed the copy). aspect-ratio derives the height. */
+    .hero-vids #heroVid { width: clamp(170px, 21vw, 320px); height: auto; }
+    .chaos-pod { display: block; }
+    .hero-vids.chaos .chaos-hint { display: block; }
+    .chaos-pod { width: clamp(140px, 18vw, 275px); height: auto; z-index: 0; }
+    .chaos-left  { transform: rotate(-5deg) translateY(16px); margin-right: clamp(-30px, -2vw, -16px); }
+    .chaos-right { transform: rotate(5deg)  translateY(16px); margin-left:  clamp(-30px, -2vw, -16px); }
+    .hero-vids #heroVid { z-index: 1; }
+    .hero-vids.chaos .chaos-pod { box-shadow: 0 0 50px rgba(232,93,4,.2), 0 0 120px rgba(232,93,4,.07); }
+    #runs { display: none; } /* those clips are already up in the hero */
+  }
+
   /* Run clips — portrait pods, same treatment as the hero video */
   .runs-grid {
     display: flex; gap: 32px; justify-content: center; flex-wrap: wrap;
@@ -465,7 +488,7 @@ document.addEventListener('DOMContentLoaded', function () {
     <circle cx="40" cy="40" r="38" stroke="#1c69d4" stroke-width="1.5" opacity=".3"/>
     <path d="M44 8L24 44h14l-4 30 28-38H43l4-30z" fill="url(#bolt)" opacity=".9"/>
   </svg>
-  <span class="nav-name">Flame <em>Link</em></span>
+  <span class="nav-name">Flame<em>Link</em></span>
   <a class="btn btn-flame nav-cta" href="#order">Get Yours</a>
 </nav>
 
@@ -499,15 +522,30 @@ document.addEventListener('DOMContentLoaded', function () {
         <span class="tag">BMW F &amp; G series · more cars soon</span>
       </div>
 
-      <div class="hero-vid" id="heroVid">
-        <video id="promoVid" preload="none" poster="promo/poster.jpg" playsinline loop>
-          <source src="promo/run_001_web.mp4" type="video/mp4">
-        </video>
-        <div class="promo-overlay" id="promoOverlay">
-          <button class="play-btn" aria-label="Play flame video">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          </button>
-          <span class="play-hint">~22 MB · tap to load</span>
+      <div class="hero-vids" id="heroVids">
+        <div class="hero-vid chaos-pod chaos-left">
+          <video preload="none" poster="promo/poster_002.jpg" playsinline loop muted>
+            <source src="promo/run_002_web.mp4" type="video/mp4">
+          </video>
+          <span class="sound-hint chaos-hint">🔊 tap for sound</span>
+        </div>
+        <div class="hero-vid" id="heroVid">
+          <video id="promoVid" preload="none" poster="promo/poster.jpg" playsinline loop>
+            <source src="promo/run_001_web.mp4" type="video/mp4">
+          </video>
+          <div class="promo-overlay" id="promoOverlay">
+            <button class="play-btn" aria-label="Play flame video">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            </button>
+            <span class="play-hint">~5 MB · tap to load</span>
+          </div>
+          <span class="sound-hint chaos-hint">🔊 tap for sound</span>
+        </div>
+        <div class="hero-vid chaos-pod chaos-right">
+          <video preload="none" poster="promo/poster_003.jpg" playsinline loop muted>
+            <source src="promo/run_003_web.mp4" type="video/mp4">
+          </video>
+          <span class="sound-hint chaos-hint">🔊 tap for sound</span>
         </div>
       </div>
     </div>
@@ -825,10 +863,38 @@ document.addEventListener('DOMContentLoaded', function () {
 })();
 </script>
 <script>
+/* Hero: flame chaos on desktop/tablet (all three autoplay muted), classic
+   tap-to-load single video on mobile. */
+var CHAOS_MODE = window.matchMedia('(min-width: 861px)').matches;
 (function () {
   var overlay = document.getElementById('promoOverlay');
   var vid = document.getElementById('promoVid');
   if (!overlay || !vid) return;
+
+  if (CHAOS_MODE) {
+    var wrap = document.getElementById('heroVids');
+    wrap.classList.add('chaos');
+    overlay.classList.add('hidden');
+    var pods = Array.prototype.slice.call(wrap.querySelectorAll('video'));
+    pods.forEach(function (v) {
+      v.muted = true;
+      v.play().catch(function () {});
+      v.style.cursor = 'pointer';
+      v.addEventListener('click', function () {
+        var wasMuted = v.muted;
+        pods.forEach(function (other) { other.muted = true; }); // one voice at a time
+        v.muted = !wasMuted;
+        if (!v.muted) window.trackEvent('hero_chaos_unmuted');
+        pods.forEach(function (other) {
+          var hint = other.parentElement.querySelector('.chaos-hint');
+          if (hint) hint.textContent = other.muted ? '🔊 tap for sound' : '🔇 tap to mute';
+        });
+      });
+    });
+    window.trackEvent('hero_chaos_autoplay');
+    return;
+  }
+
   overlay.addEventListener('click', function () {
     overlay.classList.add('hidden');
     vid.play();
@@ -865,8 +931,10 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 })();
 
-/* Mini sticky player */
+/* Mini sticky player (mobile/tap-to-load mode only — in chaos mode the three
+   pods stay in the hero, and detaching one would break the composition) */
 (function () {
+  if (CHAOS_MODE) return;
   var pod      = document.getElementById('heroVid');
   var closeBtn = document.getElementById('vidClose');
   var hero     = document.querySelector('.hero');
