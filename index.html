@@ -1225,7 +1225,10 @@ resendBtn?.addEventListener('click', () => {
 });
 
 document.getElementById('backHomeBtn')?.addEventListener('click', () => {
-  location.href = '/';
+  // Relative, not '/': the site lives under /flink/ on GitHub Pages, so an
+  // absolute root would land on the org page. './' reloads THIS site fresh
+  // (also correct locally and under any future custom domain).
+  location.href = './';
 });
 </script>
 
