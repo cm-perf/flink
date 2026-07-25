@@ -1133,6 +1133,21 @@ form?.addEventListener('submit', async (e) => {
   if (!/^\S+@\S+\.\S+$/.test(email)) { setStatus('Enter a valid email — that is where your code goes.', 'err'); return; }
   if (!/^\+\d{8,15}$/.test(phone)) { setStatus('Enter a valid phone with country code, e.g. +233…', 'err'); return; }
 
+  // Troll filters: our own contact details entered as "theirs", and junk
+  // number patterns (someone literally ordered using our shop number).
+  const OUR_CONTACTS = ['+233206187456', '+233245858875', 'cmperformancegh@gmail.com'];
+  if (OUR_CONTACTS.includes(phone) || OUR_CONTACTS.includes(email.toLowerCase())) {
+    window.trackEvent?.('order_own_contact_rejected');
+    setStatus("That's our number 🙂 — enter YOUR contact details so we can reach you about your build.", 'err');
+    return;
+  }
+  const nationalDigits = phone.slice(1);
+  if (/(\d)\1{6,}/.test(nationalDigits) || '01234567890123456789'.includes(nationalDigits.slice(-8))) {
+    window.trackEvent?.('order_phone_rejected');
+    setStatus('That phone number doesn\'t look real — we need it to arrange your build.', 'err');
+    return;
+  }
+
   // The regex only proves the SHAPE of an address. Junk domains still pass
   // (ssggh@ggjj.com), the OTP send then bounces, and every bounce lands in our
   // inbox. Two DNS-over-HTTPS layers before we send anything:
