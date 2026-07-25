@@ -887,6 +887,16 @@ const configured = !SUPABASE_URL.includes('PASTE_') && !SUPABASE_ANON_KEY.includ
 // and insert the row. Don't persist it (no lingering auth/refresh loop on every
 // visitor who ever ordered). The in-memory session from verifyOtp still authorizes
 // the insert that immediately follows.
+// Keep the Supabase project awake: free-tier projects pause after days of no
+// API activity, which would silently kill the order form. Every visit fires
+// one tiny REST request (once per browser session). The scheduled GitHub
+// Action in .github/workflows/supabase-keepalive.yml covers visitor-free weeks.
+if (configured && !sessionStorage.getItem('supaPinged')) {
+  sessionStorage.setItem('supaPinged', '1');
+  fetch(SUPABASE_URL + '/auth/v1/health', { headers: { apikey: SUPABASE_ANON_KEY } })
+    .catch(() => {}); // fire-and-forget; a failed ping must never affect the page
+}
+
 const supabase = configured
   ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
       auth: { persistSession: false, autoRefreshToken: false },
