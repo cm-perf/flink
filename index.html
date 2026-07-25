@@ -132,14 +132,22 @@
   .play-btn svg { width: 26px; height: 26px; fill: #000; margin-left: 3px; }
   .play-hint { font-size: 11px; color: rgba(255,255,255,.4); letter-spacing: 1px; }
 
-  /* Wide run clip (landscape runs live here, not in the portrait hero pod) */
-  .run-vid {
+  /* Run clips — portrait pods, same treatment as the hero video */
+  .runs-grid {
+    display: flex; gap: 32px; justify-content: center; flex-wrap: wrap;
+  }
+  .run-pod {
     position: relative; overflow: hidden;
-    max-width: 880px; margin: 0 auto;
-    aspect-ratio: 16/9; border-radius: 18px;
+    height: clamp(300px, 58vh, 500px); aspect-ratio: 9/16;
+    border-radius: 18px;
     box-shadow: 0 0 70px rgba(232,93,4,.22), 0 0 160px rgba(232,93,4,.08);
   }
-  .run-vid video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .run-pod video { width: 100%; height: 100%; object-fit: cover; display: block; cursor: pointer; }
+  .sound-hint {
+    position: absolute; left: 12px; bottom: 10px; z-index: 1; pointer-events: none;
+    font-size: 10px; letter-spacing: 1px; color: rgba(255,255,255,.55);
+    background: rgba(0,0,0,.45); border-radius: 999px; padding: 4px 10px;
+  }
 
   /* Mini sticky player */
   .hero-vid.mini {
@@ -475,17 +483,20 @@
   <div class="wrap">
     <div class="sec-label">
       <span class="label">Fresh from the road</span>
-      <h2>Another night, another run.</h2>
+      <h2>Two more runs. Same result.</h2>
     </div>
-    <div class="run-vid" id="runVid2">
-      <video id="runVid2Video" preload="none" poster="promo/poster_002.jpg" playsinline loop>
-        <source src="promo/run_002_web.mp4" type="video/mp4">
-      </video>
-      <div class="promo-overlay" id="runVid2Overlay">
-        <button class="play-btn" aria-label="Play flame run video">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </button>
-        <span class="play-hint">~7 MB · tap to load</span>
+    <div class="runs-grid" id="runsGrid">
+      <div class="run-pod">
+        <video class="run-auto" preload="none" poster="promo/poster_002.jpg" playsinline loop muted>
+          <source src="promo/run_002_web.mp4" type="video/mp4">
+        </video>
+        <span class="sound-hint">🔊 tap for sound</span>
+      </div>
+      <div class="run-pod">
+        <video class="run-auto" preload="none" poster="promo/poster_003.jpg" playsinline loop muted>
+          <source src="promo/run_003_web.mp4" type="video/mp4">
+        </video>
+        <span class="sound-hint">🔊 tap for sound</span>
       </div>
     </div>
   </div>
@@ -791,17 +802,29 @@
   });
 })();
 
-/* Run 002 clip — same tap-to-load pattern; click the video to pause/resume */
+/* Run clips: autoplay (muted) the moment the section scrolls into view,
+   pause when it scrolls out. Tap a clip for sound. */
 (function () {
-  var overlay = document.getElementById('runVid2Overlay');
-  var vid = document.getElementById('runVid2Video');
-  if (!overlay || !vid) return;
-  overlay.addEventListener('click', function () {
-    overlay.classList.add('hidden');
-    vid.play();
-  });
-  vid.addEventListener('click', function () {
-    if (vid.paused) vid.play(); else vid.pause();
+  var grid = document.getElementById('runsGrid');
+  if (!grid) return;
+  var vids = Array.prototype.slice.call(grid.querySelectorAll('video.run-auto'));
+
+  new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      vids.forEach(function (vid) {
+        if (entry.isIntersecting) vid.play().catch(function () {});
+        else vid.pause();
+      });
+    });
+  }, { threshold: 0.3 }).observe(grid);
+
+  vids.forEach(function (vid) {
+    vid.addEventListener('click', function () {
+      vid.muted = !vid.muted;
+      if (!vid.muted) vid.play().catch(function () {});
+      var hint = vid.parentElement.querySelector('.sound-hint');
+      if (hint) hint.textContent = vid.muted ? '🔊 tap for sound' : '🔇 tap to mute';
+    });
   });
 })();
 
