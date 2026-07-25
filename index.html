@@ -927,6 +927,39 @@ const supabase = configured
   : null;
 let pending = null; // the order, held until the email is verified
 
+// ── Email-domain sanity (kills OTP bounce spam) ─────────────────────────────
+// Mail hosts used by domain-parking / catch-all-bounce services: a domain
+// whose ONLY mail server is one of these cannot receive real mail.
+const PARKED_MAIL_HOSTS = ['mailerhost.net', 'h-email.net', 'above.com', 'bodis.com', 'sedoparking.com', 'parklogic.com'];
+const KNOWN_GOOD_DOMAINS = new Set(['gmail.com', 'googlemail.com', 'yahoo.com', 'outlook.com', 'hotmail.com', 'icloud.com', 'live.com', 'proton.me', 'protonmail.com']);
+
+async function emailDomainLooksReal(email) {
+  const domain = email.split('@')[1].toLowerCase();
+  if (KNOWN_GOOD_DOMAINS.has(domain)) return true;
+  const cached = sessionStorage.getItem('mxok:' + domain);
+  if (cached !== null) return cached === '1';
+  let ok = true; // fail open
+  try {
+    const resolve = async type => {
+      const r = await fetch(`https://dns.google/resolve?name=${encodeURIComponent(domain)}&type=${type}`,
+        { signal: AbortSignal.timeout(4000) });
+      return r.json();
+    };
+    const mx = await resolve('MX');
+    const mxHosts = (mx.Answer || []).filter(a => a.type === 15)
+      .map(a => a.data.split(/\s+/).pop().replace(/\.$/, '').toLowerCase());
+    if (mxHosts.length) {
+      ok = !mxHosts.every(host => PARKED_MAIL_HOSTS.some(parked => host === parked || host.endsWith('.' + parked)));
+    } else {
+      // No MX: RFC fallback is the bare A record — allow only if one exists.
+      const a = await resolve('A');
+      ok = (a.Answer || []).some(rec => rec.type === 1);
+    }
+    sessionStorage.setItem('mxok:' + domain, ok ? '1' : '0');
+  } catch (_) { /* network/DoH blocked — let it through */ }
+  return ok;
+}
+
 function stripHtml(s) {
   const el = document.createElement('div');
   el.textContent = s;
@@ -1036,6 +1069,19 @@ form?.addEventListener('submit', async (e) => {
   if (!name || !model) { setStatus('Please add your name and your car.', 'err'); return; }
   if (!/^\S+@\S+\.\S+$/.test(email)) { setStatus('Enter a valid email — that is where your code goes.', 'err'); return; }
   if (!/^\+\d{8,15}$/.test(phone)) { setStatus('Enter a valid phone with country code, e.g. +233…', 'err'); return; }
+
+  // The regex only proves the SHAPE of an address. Junk domains still pass
+  // (ssggh@ggjj.com), the OTP send then bounces, and every bounce lands in our
+  // inbox. Two DNS-over-HTTPS layers before we send anything:
+  //   1. domain must have mail servers at all;
+  //   2. its mail server must not be a known domain-parking catch-all
+  //      (parked domains happily accept DNS and bounce every message).
+  // Fails OPEN on lookup errors — a blocked resolver must never cost an order.
+  setStatus('Checking your email…');
+  if (!(await emailDomainLooksReal(email))) {
+    setStatus("That email address can't receive mail — double-check it. Your order code goes there.", 'err');
+    return;
+  }
 
   // Security check 1: CAPTCHA
   const captchaOk = await verifyTurnstile();
