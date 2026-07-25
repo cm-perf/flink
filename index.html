@@ -968,33 +968,59 @@ let pending = null; // the order, held until the email is verified
 // Mail hosts used by domain-parking / catch-all-bounce services: a domain
 // whose ONLY mail server is one of these cannot receive real mail.
 const PARKED_MAIL_HOSTS = ['mailerhost.net', 'h-email.net', 'above.com', 'bodis.com', 'sedoparking.com', 'parklogic.com'];
+// Shared TEMP-MAIL infrastructure: disposable services rotate their domains
+// daily, but they all route through the same mail hosts — block the host and
+// the whole rotating family dies (wabblywabble/wallywatts serve diarshop.com
+// and hundreds of siblings).
+const DISPOSABLE_MAIL_HOSTS = ['wabblywabble.com', 'wallywatts.com', 'yopmail.com', 'guerrillamail.com', 'temp-mail.org'];
 const KNOWN_GOOD_DOMAINS = new Set(['gmail.com', 'googlemail.com', 'yahoo.com', 'outlook.com', 'hotmail.com', 'icloud.com', 'live.com', 'proton.me', 'protonmail.com']);
 
-async function emailDomainLooksReal(email) {
-  const domain = email.split('@')[1].toLowerCase();
-  if (KNOWN_GOOD_DOMAINS.has(domain)) return true;
-  const cached = sessionStorage.getItem('mxok:' + domain);
-  if (cached !== null) return cached === '1';
-  let ok = true; // fail open
+// Community disposable-domain blocklist (~8k domains) — fetched lazily only
+// when someone actually submits an order, cached for the page's lifetime.
+let dispoSet = null;
+async function loadDisposableList() {
+  if (dispoSet !== null) return dispoSet;
   try {
-    const resolve = async type => {
-      const r = await fetch(`https://dns.google/resolve?name=${encodeURIComponent(domain)}&type=${type}`,
-        { signal: AbortSignal.timeout(4000) });
-      return r.json();
-    };
-    const mx = await resolve('MX');
-    const mxHosts = (mx.Answer || []).filter(a => a.type === 15)
-      .map(a => a.data.split(/\s+/).pop().replace(/\.$/, '').toLowerCase());
-    if (mxHosts.length) {
-      ok = !mxHosts.every(host => PARKED_MAIL_HOSTS.some(parked => host === parked || host.endsWith('.' + parked)));
+    const r = await fetch('https://cdn.jsdelivr.net/gh/disposable-email-domains/disposable-email-domains@master/disposable_email_blocklist.conf',
+      { signal: AbortSignal.timeout(5000) });
+    dispoSet = new Set((await r.text()).split('\n').map(s => s.trim().toLowerCase()).filter(Boolean));
+  } catch (_) { dispoSet = new Set(); } // fail open
+  return dispoSet;
+}
+
+const hostMatches = (host, list) => list.some(h => host === h || host.endsWith('.' + h));
+
+// Returns 'ok' | 'dead' | 'disposable'
+async function classifyEmailDomain(email) {
+  const domain = email.split('@')[1].toLowerCase();
+  if (KNOWN_GOOD_DOMAINS.has(domain)) return 'ok';
+  const cached = sessionStorage.getItem('mxc:' + domain);
+  if (cached) return cached;
+  let verdict = 'ok'; // fail open
+  try {
+    if ((await loadDisposableList()).has(domain)) {
+      verdict = 'disposable';
     } else {
-      // No MX: RFC fallback is the bare A record — allow only if one exists.
-      const a = await resolve('A');
-      ok = (a.Answer || []).some(rec => rec.type === 1);
+      const resolve = async type => {
+        const r = await fetch(`https://dns.google/resolve?name=${encodeURIComponent(domain)}&type=${type}`,
+          { signal: AbortSignal.timeout(4000) });
+        return r.json();
+      };
+      const mx = await resolve('MX');
+      const mxHosts = (mx.Answer || []).filter(a => a.type === 15)
+        .map(a => a.data.split(/\s+/).pop().replace(/\.$/, '').toLowerCase());
+      if (mxHosts.length) {
+        if (mxHosts.some(h => hostMatches(h, DISPOSABLE_MAIL_HOSTS))) verdict = 'disposable';
+        else if (mxHosts.every(h => hostMatches(h, PARKED_MAIL_HOSTS))) verdict = 'dead';
+      } else {
+        // No MX: RFC fallback is the bare A record — allow only if one exists.
+        const a = await resolve('A');
+        if (!(a.Answer || []).some(rec => rec.type === 1)) verdict = 'dead';
+      }
     }
-    sessionStorage.setItem('mxok:' + domain, ok ? '1' : '0');
+    sessionStorage.setItem('mxc:' + domain, verdict);
   } catch (_) { /* network/DoH blocked — let it through */ }
-  return ok;
+  return verdict;
 }
 
 function stripHtml(s) {
@@ -1116,9 +1142,15 @@ form?.addEventListener('submit', async (e) => {
   // Fails OPEN on lookup errors — a blocked resolver must never cost an order.
   window.trackEvent?.('order_attempt');
   setStatus('Checking your email…');
-  if (!(await emailDomainLooksReal(email))) {
+  const emailVerdict = await classifyEmailDomain(email);
+  if (emailVerdict === 'dead') {
     window.trackEvent?.('order_email_rejected');
     setStatus("That email address can't receive mail — double-check it. Your order code goes there.", 'err');
+    return;
+  }
+  if (emailVerdict === 'disposable') {
+    window.trackEvent?.('order_email_disposable');
+    setStatus('Temp-mail addresses can\'t be used — your order updates and warranty are tied to this email.', 'err');
     return;
   }
 
