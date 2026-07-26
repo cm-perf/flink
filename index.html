@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
   }, { threshold: 0.4 });
-  ['runs', 'faq', 'why', 'bmw', 'order'].forEach(function (id) {
+  ['faq', 'why', 'order'].forEach(function (id) {
     var el = document.getElementById(id);
     if (el) obs.observe(el);
   });
@@ -193,9 +193,9 @@ document.addEventListener('DOMContentLoaded', function () {
     .chaos-left  { transform: rotate(-5deg) translateY(16px); margin-right: clamp(-30px, -2vw, -16px); }
     .chaos-right { transform: rotate(5deg)  translateY(16px); margin-left:  clamp(-30px, -2vw, -16px); }
     .hero-vids #heroVid { z-index: 1; }
-    .hero-vids.chaos .chaos-pod { box-shadow: 0 0 50px rgba(232,93,4,.2), 0 0 120px rgba(232,93,4,.07); }
-    #runs { display: none; } /* those clips are already up in the hero */
   }
+  .hero-vids.chaos .chaos-pod { box-shadow: 0 0 50px rgba(232,93,4,.2), 0 0 120px rgba(232,93,4,.07); }
+  #runs { display: none; } /* all three clips live in the hero now */
 
   /* Run clips — portrait pods, same treatment as the hero video */
   .runs-grid {
@@ -267,6 +267,14 @@ document.addEventListener('DOMContentLoaded', function () {
     .hero p { margin-left: auto; margin-right: auto; }
     .hero .ctas { justify-content: center; }
     .hero-vid { height: auto; width: clamp(160px, 52vw, 240px); }
+    /* Mobile chaos: the trio fans edge-to-edge under the copy — every
+       angle flaming without scrolling to a separate section. Full-bleed
+       (cancels .wrap padding) and totals ≤100vw so nothing overflows. */
+    .hero-vids { justify-content: center; margin: 0 -20px; max-width: 100vw; }
+    .hero-vids #heroVid { width: 42vw; max-width: 230px; z-index: 1; }
+    .chaos-pod { display: block; width: 32vw; max-width: 180px; }
+    .chaos-left  { transform: rotate(-7deg) translateY(12px); margin-right: -9vw; }
+    .chaos-right { transform: rotate(7deg)  translateY(12px); margin-left: -9vw; }
   }
 
   /* sections */
@@ -283,13 +291,6 @@ document.addEventListener('DOMContentLoaded', function () {
   .feat .ico svg line, .feat .ico svg rect { stroke: url(#bolt); }
   .feat h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
   .feat p { font-size: 13px; color: var(--dim); line-height: 1.55; }
-
-  /* bmw story — competitive differentiator */
-  .bmw-story { max-width: 660px; margin: 0 auto; }
-  .bmw-story p { font-size: 14px; color: var(--dim); line-height: 1.7; margin-bottom: 16px; }
-  .bmw-story p strong { color: var(--text); }
-  .bmw-story .bmw-lead { font-size: 16px; color: var(--text); border-left: 3px solid var(--flame); padding-left: 18px; margin-bottom: 20px; }
-  .bmw-story .bmw-signoff { color: var(--muted); font-size: 12px; font-style: italic; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
 
   /* specs — plain rows, mono values */
   .specs { max-width: 620px; margin: 0 auto; }
@@ -532,7 +533,6 @@ document.addEventListener('DOMContentLoaded', function () {
   <div class="wrap">
     <div class="hrow">
       <div class="hero-copy">
-        <span class="eyebrow">FlameLink — 100% Standalone</span>
         <h1>Real exhaust flames.<br><span class="flame">No ECU. No engine mods.</span></h1>
         <p>Bolt-on kit — completely standalone. No ECU flash, no tune, no engine mods. Just automatic flames on every lift-off.</p>
         <div class="ctas">
@@ -540,7 +540,6 @@ document.addEventListener('DOMContentLoaded', function () {
           <a class="btn btn-line" href="#why">Why not just tune it?</a>
         </div>
         <span class="tag">Standalone · no engine mods · fully reversible</span>
-        <span class="tag">BMW F &amp; G series · more cars soon</span>
       </div>
 
       <div class="hero-vids" id="heroVids">
@@ -688,52 +687,37 @@ document.addEventListener('DOMContentLoaded', function () {
   </div>
 </section>
 
-<section id="bmw">
-  <div class="wrap">
-    <div class="sec-label">
-      <span class="label">Why FlameLink works on BMWs</span>
-      <h2>Other kits don't work here.</h2>
-    </div>
-    <div class="bmw-story">
-      <p class="bmw-lead">Most bolt-on flame kits cut your ignition to create a spark and dump fuel into the cylinders. That thins your oil, stresses your rings, and <strong>doesn't even work on modern BMWs.</strong></p>
-      <p>We know — we tried. The BMW DME is smarter than that. The moment it detects a missing ignition event, it cuts fuel injection entirely. No fuel, no flame. Those kits simply can't fire on a BMW.</p>
-      <p>FlameLink is different. It's a <strong>fully standalone exhaust system</strong>. It never touches your ignition, your injectors, or your DME. It injects fuel and sparks <em>in the exhaust tip</em>, downstream of everything. The ECU doesn't know it exists — and your engine runs exactly as BMW built it.</p>
-      <p class="bmw-signoff">We're a tiny automotive engineering team based in a small town in Ghana — been researching and testing on our own 428i for the longest. This isn't a theory. This is what works.</p>
-    </div>
-  </div>
-</section>
-
 <section id="order">
   <div class="wrap">
     <div class="sec-label">
       <span class="label">Get yours</span>
       <h2>Pick your build.</h2>
-      <p style="font-size:14px;color:var(--dim);margin-top:12px;">Reserving is <strong style="color:var(--flame);">free</strong> and takes a minute — you don't pay anything until we've confirmed your build with you.</p>
+      <p style="font-size:14px;color:var(--dim);margin-top:12px;">Reserving is <strong style="color:var(--flame);">free</strong> — you only pay after we confirm your build.</p>
     </div>
 
     <div class="steps-bar">
       <div class="step-item active">
         <div class="step-num">1</div>
         <h3>Reserve — free</h3>
-        <p>Pick your build, verify your email. No payment now.</p>
+        <p>Pick your build. No payment.</p>
       </div>
       <span class="step-arrow">→</span>
       <div class="step-item">
         <div class="step-num">2</div>
         <h3>We reach out</h3>
-        <p>Confirm your build and price, answer questions, give you a timeline.</p>
+        <p>Confirm build, price, timeline.</p>
       </div>
       <span class="step-arrow">→</span>
       <div class="step-item">
         <div class="step-num">3</div>
         <h3>Build &amp; ship</h3>
-        <p>Your kit is built in the next batch, then shipped or installed.</p>
+        <p>Next batch — shipped or installed.</p>
       </div>
       <span class="step-arrow">→</span>
       <div class="step-item">
         <div class="step-num">4</div>
         <h3>Enjoy</h3>
-        <p>Flames on every lift-off. All show, no risk.</p>
+        <p>Flames on every lift-off.</p>
       </div>
     </div>
 
@@ -742,17 +726,16 @@ document.addEventListener('DOMContentLoaded', function () {
         <span class="badge now">Ready now</span>
         <span class="label">Complete kit · BMW F &amp; G series</span>
         <div class="price"><small>Complete kit</small>$650</div>
-        <div class="price-note" style="font-size:11px;color:var(--muted);margin-top:6px;">Priced in USD · payable in cedis at the day's rate · less than a flame tune, none of the engine risk</div>
+        <div class="price-note" style="font-size:11px;color:var(--muted);margin-top:6px;">Priced in USD · local payment accepted</div>
         <ul class="incl">
-          <li>Flames on every lift-off — tuned from your phone, subtle daily crackle to full send</li>
-          <li>Everything included: fuel delivery &amp; ignition module + plug-in harness</li>
-          <li>100% standalone — no engine mods, comes off without a trace</li>
-          <li>Android Auto app (optional) — live monitoring &amp; accessory control</li>
+          <li>Flames on every lift-off — tuned from your phone</li>
+          <li>Complete kit: module + plug-in harness</li>
+          <li>No engine mods — comes off without a trace</li>
+          <li>Optional Android Auto app — live monitoring &amp; extras</li>
           <li>Install guide &amp; support · pro fitting $150</li>
-          <li>Delivery across Ghana</li>
+          <li>Delivery or pro install — your choice</li>
         </ul>
         <a class="btn btn-flame offer-cta" data-kind="BMW F &amp; G series (ready-made)" href="#reserve">Reserve Yours — $650</a>
-        <p class="note" style="margin-top:12px;">Free to reserve · pay only once your build is confirmed</p>
       </div>
 
       <div class="order-card req-card">
@@ -760,19 +743,17 @@ document.addEventListener('DOMContentLoaded', function () {
         <span class="label">Custom build</span>
         <div class="price"><small>Priced on request</small>Custom</div>
         <ul class="incl">
-          <li>Any car, any platform — if it can be built, we build it</li>
-          <li>Flame behaviour developed and tuned to your exact car</li>
-          <li>Android Auto app (optional) — monitor, customise, control anything</li>
+          <li>Any car — if it can be built, we build it</li>
+          <li>Flame behaviour tuned to your exact car</li>
           <li>Special requests and one-offs welcome</li>
-          <li>A real engineering job — usually around 2 months of R&amp;D</li>
-          <li>Quoted up front, with staged deposits</li>
+          <li>~2 months R&amp;D · quoted up front · staged deposits</li>
         </ul>
         <a class="btn btn-line offer-cta" data-kind="Custom build" href="#reserve">Request Custom Build</a>
       </div>
     </div>
 
     <div class="batch-banner">
-      <strong>Hand-built in small batches — first come, first served.</strong> Every kit is assembled and bench-tested by the engineers who designed it. Your free reservation locks a slot in the next batch; we confirm your exact timeline when we reach out.
+      <strong>Hand-built in small batches, first come first served</strong> — your reservation locks a slot in the next batch.
     </div>
 
     <div class="order-card" id="reserve">
@@ -784,7 +765,7 @@ document.addEventListener('DOMContentLoaded', function () {
         </select>
         <input type="text" name="name" placeholder="Full name" autocomplete="name" required />
         <input type="email" name="email" placeholder="Email — we'll send a code to verify" autocomplete="email" required />
-        <input type="tel" name="phone" placeholder="Phone — e.g. +233 20 618 7456" autocomplete="tel" required />
+        <input type="tel" name="phone" placeholder="Phone — WhatsApp preferred, with country code" autocomplete="tel" required />
         <input type="text" name="model" placeholder="Your car — e.g. F30 335i" required />
         <textarea name="note" placeholder="For a custom build, tell us the car and what you want (optional)"></textarea>
         <label class="check"><input type="checkbox" name="install" /> Add professional installation ($150)</label>
@@ -800,7 +781,7 @@ document.addEventListener('DOMContentLoaded', function () {
       </div>
 
       <p id="orderStatus" class="form-status" role="status" aria-live="polite"></p>
-      <p class="note">No payment now — we confirm your build first · BMW F &amp; G ready now, any other car by request · never touches your engine</p>
+      <p class="note">BMW F &amp; G ready now · any other car by request · never touches your engine</p>
     </div>
   </div>
 </section>
@@ -818,7 +799,7 @@ document.addEventListener('DOMContentLoaded', function () {
       <a class="totop" href="#top">Back to top ↑</a>
     </div>
     <p class="disclaimer">For off-road and show use only. A flame kit may be illegal on public roads where you live — check your local laws. Operate away from people, fuel and structures. Full <a href="safety.html">safety, disclaimer &amp; terms</a>.</p>
-    <p class="copy mono">© <span id="yr"></span> CM Performance · Made in Ghana</p>
+    <p class="copy mono">© <span id="yr"></span> CM Performance</p>
   </div>
 </footer>
 
@@ -831,7 +812,7 @@ document.addEventListener('DOMContentLoaded', function () {
     <path d="M44 8L24 44h14l-4 30 28-38H43l4-30z" fill="url(#bolt)" opacity="0.9"/>
   </svg>
   <h1>Slot locked. 🔥</h1>
-  <p>Your reservation is in — nothing to pay yet. We build in small batches; we'll reach out to confirm your build, price and timeline before anything else happens.</p>
+  <p>Your reservation is in — nothing to pay yet. We'll reach out to confirm your build, price and timeline.</p>
   <button class="btn btn-line" id="backHomeBtn">Back to home</button>
 </div>
 
@@ -902,9 +883,10 @@ document.addEventListener('DOMContentLoaded', function () {
 })();
 </script>
 <script>
-/* Hero: flame chaos on desktop/tablet (all three autoplay muted), classic
-   tap-to-load single video on mobile. */
-var CHAOS_MODE = window.matchMedia('(min-width: 861px)').matches;
+/* Hero: flame chaos everywhere — all three runs autoplay muted, fanned
+   trio on desktop, edge-stacked fan on mobile. Tap a pod for sound.
+   (Affordable since the VP9 pass: all three clips total ~2.9 MB.) */
+var CHAOS_MODE = true;
 
 /* Every video pod gets a buffering spinner: visible whenever the clip is
    trying to play but has no frames yet (slow mobile data, in-app browsers).
@@ -930,9 +912,18 @@ var CHAOS_MODE = window.matchMedia('(min-width: 861px)').matches;
     wrap.classList.add('chaos');
     overlay.classList.add('hidden');
     var pods = Array.prototype.slice.call(wrap.querySelectorAll('video'));
+    // Run the trio only while the hero is on screen — three decoders under
+    // a scrolled-away hero just burn battery and data.
+    new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        pods.forEach(function (v) {
+          if (entry.isIntersecting) v.play().catch(function () {});
+          else v.pause();
+        });
+      });
+    }, { threshold: 0.15 }).observe(wrap);
     pods.forEach(function (v) {
       v.muted = true;
-      v.play().catch(function () {});
       v.style.cursor = 'pointer';
       v.addEventListener('click', function () {
         var wasMuted = v.muted;
@@ -1342,7 +1333,7 @@ form?.addEventListener('submit', async (e) => {
 
   if (!name || !model) { setStatus('Please add your name and your car.', 'err'); return; }
   if (!/^\S+@\S+\.\S+$/.test(email)) { setStatus('Enter a valid email — that is where your code goes.', 'err'); return; }
-  if (!/^\+\d{8,15}$/.test(phone)) { setStatus('Enter a valid phone with country code, e.g. +233…', 'err'); return; }
+  if (!/^\+\d{8,15}$/.test(phone)) { setStatus('Enter a valid phone number with your country code.', 'err'); return; }
 
   // Troll filters: our own contact details entered as "theirs", and junk
   // number patterns (someone literally ordered using our shop number).
