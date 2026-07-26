@@ -708,19 +708,20 @@ document.addEventListener('DOMContentLoaded', function () {
     <div class="sec-label">
       <span class="label">Get yours</span>
       <h2>Pick your build.</h2>
+      <p style="font-size:14px;color:var(--dim);margin-top:12px;">Reserving is <strong style="color:var(--flame);">free</strong> and takes a minute — you don't pay anything until we've confirmed your build with you.</p>
     </div>
 
     <div class="steps-bar">
       <div class="step-item active">
         <div class="step-num">1</div>
-        <h3>Place order</h3>
-        <p>Pick your build and verify your email.</p>
+        <h3>Reserve — free</h3>
+        <p>Pick your build, verify your email. No payment now.</p>
       </div>
       <span class="step-arrow">→</span>
       <div class="step-item">
         <div class="step-num">2</div>
         <h3>We reach out</h3>
-        <p>Confirm your build, answer questions, and give you a timeline.</p>
+        <p>Confirm your build and price, answer questions, give you a timeline.</p>
       </div>
       <span class="step-arrow">→</span>
       <div class="step-item">
@@ -736,25 +737,22 @@ document.addEventListener('DOMContentLoaded', function () {
       </div>
     </div>
 
-    <div class="batch-banner">
-      <strong>Built to order, in small batches.</strong> Every kit is hand-assembled and bench-tested before it ships, so new orders join the next production batch — expect a lead time rather than same-day delivery. Reserve now to lock your place in the queue; we'll confirm your exact timeline the moment we reach out.
-    </div>
-
     <div class="offers">
       <div class="order-card">
         <span class="badge now">Ready now</span>
         <span class="label">Complete kit · BMW F &amp; G series</span>
-        <div class="price"><small>Starts at</small>$650</div>
-        <div class="price-note" style="font-size:11px;color:var(--muted);margin-top:6px;">Priced in USD · payable in cedis at the day's rate</div>
+        <div class="price"><small>Complete kit</small>$650</div>
+        <div class="price-note" style="font-size:11px;color:var(--muted);margin-top:6px;">Priced in USD · payable in cedis at the day's rate · less than a flame tune, none of the engine risk</div>
         <ul class="incl">
-          <li>Fuel Delivery &amp; Ignition module + plug-in harness</li>
-          <li>Standalone — no engine mods, fully reversible</li>
-          <li>The app — tune every flame stage</li>
-          <li>Android Auto app (optional) — monitor your car in real-time, control accessories like underglows &amp; interior lighting, or anything you dream up</li>
-          <li>Install guide &amp; support · pro fitting from $150</li>
+          <li>Flames on every lift-off — tuned from your phone, subtle daily crackle to full send</li>
+          <li>Everything included: fuel delivery &amp; ignition module + plug-in harness</li>
+          <li>100% standalone — no engine mods, comes off without a trace</li>
+          <li>Android Auto app (optional) — live monitoring &amp; accessory control</li>
+          <li>Install guide &amp; support · pro fitting $150</li>
           <li>Delivery across Ghana</li>
         </ul>
-        <a class="btn btn-flame offer-cta" data-kind="BMW F &amp; G series (ready-made)" href="#reserve">Order Now — $650</a>
+        <a class="btn btn-flame offer-cta" data-kind="BMW F &amp; G series (ready-made)" href="#reserve">Reserve Yours — $650</a>
+        <p class="note" style="margin-top:12px;">Free to reserve · pay only once your build is confirmed</p>
       </div>
 
       <div class="order-card req-card">
@@ -773,8 +771,12 @@ document.addEventListener('DOMContentLoaded', function () {
       </div>
     </div>
 
+    <div class="batch-banner">
+      <strong>Hand-built in small batches — first come, first served.</strong> Every kit is assembled and bench-tested by the engineers who designed it. Your free reservation locks a slot in the next batch; we confirm your exact timeline when we reach out.
+    </div>
+
     <div class="order-card" id="reserve">
-      <span class="label" id="reserveLabel">Order Your FlameLink</span>
+      <span class="label" id="reserveLabel">Reserve Your FlameLink</span>
       <form id="orderForm" class="order-form" novalidate>
         <select name="kind" id="orderKind" aria-label="What are you after?">
           <option value="BMW F &amp; G series (ready-made)">FlameLink for BMW F &amp; G series — $650</option>
@@ -787,18 +789,18 @@ document.addEventListener('DOMContentLoaded', function () {
         <textarea name="note" placeholder="For a custom build, tell us the car and what you want (optional)"></textarea>
         <label class="check"><input type="checkbox" name="install" /> Add professional installation ($150)</label>
         <div class="cf-turnstile" data-sitekey="0x4AAAAAADrBTjHpERpNTuz8" data-size="invisible" id="turnstileWidget"></div>
-        <button type="submit" class="btn btn-flame" id="sendCodeBtn">Verify &amp; Place Order</button>
+        <button type="submit" class="btn btn-flame" id="sendCodeBtn">Reserve My Build — Free</button>
       </form>
 
       <div id="otpStep" hidden>
         <p>Enter the code we emailed to <span id="otpDest" class="mono"></span>.</p>
         <input id="otpCode" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="••••••••" />
-        <button class="btn btn-flame" id="verifyBtn">Complete Order</button>
+        <button class="btn btn-flame" id="verifyBtn">Confirm — Lock My Slot</button>
         <button class="btn btn-line" id="resendBtn" type="button">Use a different email</button>
       </div>
 
       <p id="orderStatus" class="form-status" role="status" aria-live="polite"></p>
-      <p class="note">BMW F &amp; G series ready now · built in batches, so there may be a wait · any other car by custom request · won't touch your engine</p>
+      <p class="note">No payment now — we confirm your build first · BMW F &amp; G ready now, any other car by request · never touches your engine</p>
     </div>
   </div>
 </section>
@@ -828,8 +830,8 @@ document.addEventListener('DOMContentLoaded', function () {
     <circle cx="40" cy="40" r="38" stroke="#1c69d4" stroke-width="1.5" opacity="0.3"/>
     <path d="M44 8L24 44h14l-4 30 28-38H43l4-30z" fill="url(#bolt)" opacity="0.9"/>
   </svg>
-  <h1>Thank you</h1>
-  <p>Your order's in. We build in small batches, so there may be a short wait — we'll be in touch with your timeline soon.</p>
+  <h1>Slot locked. 🔥</h1>
+  <p>Your reservation is in — nothing to pay yet. We build in small batches; we'll reach out to confirm your build, price and timeline before anything else happens.</p>
   <button class="btn btn-line" id="backHomeBtn">Back to home</button>
 </div>
 
@@ -1316,7 +1318,7 @@ document.querySelectorAll('.offer-cta').forEach((a) => {
     const sel = document.getElementById('orderKind');
     if (sel) for (const o of sel.options) if (o.value === kind) { sel.value = kind; break; }
     const lbl = document.getElementById('reserveLabel');
-    if (lbl) lbl.textContent = kind === 'Custom build' ? 'Request Custom Build' : 'Order FlameLink Kit';
+    if (lbl) lbl.textContent = kind === 'Custom build' ? 'Request Your Custom Build' : 'Reserve Your FlameLink';
   });
 });
 
