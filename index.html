@@ -854,6 +854,48 @@ document.addEventListener('DOMContentLoaded', function () {
     parts = [];
     for (var i = 0; i < count; i++) parts.push(spawn(false));
   }
+
+  /* Backfire pulse — the page breathes like the clips do: dark idle, a
+     burst from below, a decaying afterglow. Bloom colors sampled from
+     run_001's fireball (white core → orange → red fringe). */
+  var pulseE = 0, pulseX = 0.5, sparks = [], framesToPulse = 110; // first bang ~1.8s in
+  function ignite(strength) {
+    pulseE = Math.min(1, Math.max(pulseE, strength));
+    pulseX = 0.35 + Math.random() * 0.3;
+    for (var i = 0, n = Math.round(26 * strength); i < n; i++) {
+      sparks.push({
+        x: pulseX * w + (Math.random() - 0.5) * 44,
+        y: h + 6,
+        vx: (Math.random() - 0.5) * 3.2,
+        vy: -(Math.random() * 5 + 2.5) * strength - 1,
+        life: 1,
+        decay: Math.random() * 0.012 + 0.006,
+        r: Math.random() * 1.6 + 0.7,
+        c: COLORS[(Math.random() * COLORS.length) | 0]
+      });
+    }
+  }
+  function drawPulse() {
+    if (pulseE > 0.012) {
+      var g = ctx.createRadialGradient(pulseX * w, h + 30, 0, pulseX * w, h + 30, Math.max(w, h) * 0.6);
+      g.addColorStop(0,    'rgba(255,248,230,' + (0.42 * pulseE).toFixed(3) + ')');
+      g.addColorStop(0.18, 'rgba(255,179,64,'  + (0.30 * pulseE).toFixed(3) + ')');
+      g.addColorStop(0.45, 'rgba(232,93,4,'    + (0.16 * pulseE).toFixed(3) + ')');
+      g.addColorStop(1,    'rgba(192,48,48,0)');
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, w, h);
+      pulseE *= 0.965; // ~1.5s decay, like the real fireball
+    } else pulseE = 0;
+    for (var s = sparks.length - 1; s >= 0; s--) {
+      var k = sparks[s];
+      k.x += k.vx; k.y += k.vy; k.vy += 0.055; k.life -= k.decay;
+      if (k.life <= 0 || k.y > h + 20) { sparks.splice(s, 1); continue; }
+      ctx.globalAlpha = k.life * (0.6 + 0.4 * Math.random()); // crackle flicker
+      ctx.fillStyle = k.c;
+      ctx.beginPath(); ctx.arc(k.x, k.y, k.r, 0, 6.283); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
   function draw() {
     ctx.clearRect(0, 0, w, h);
     for (var i = 0; i < parts.length; i++) {
@@ -868,8 +910,18 @@ document.addEventListener('DOMContentLoaded', function () {
       ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.283); ctx.fill();
     }
     ctx.globalAlpha = 1;
+    drawPulse();
   }
-  function loop() { draw(); requestAnimationFrame(loop); }
+  function loop() {
+    if (--framesToPulse <= 0) {
+      ignite(0.55 + Math.random() * 0.45);
+      framesToPulse = Math.round((4 + Math.random() * 5) * 60); // next bang in 4–9s
+    }
+    draw();
+    requestAnimationFrame(loop);
+  }
+  // Deliberate bangs at decision moments (order section, reserve taps).
+  window.__ignite = reduce ? function () {} : ignite;
 
   window.addEventListener('resize', init);
   init();
@@ -880,6 +932,20 @@ document.addEventListener('DOMContentLoaded', function () {
     if (document.readyState === 'complete') requestAnimationFrame(loop);
     else window.addEventListener('load', function () { requestAnimationFrame(loop); });
   }
+})();
+
+/* A small backfire right at the decision points. */
+(function () {
+  var order = document.getElementById('order');
+  if (order && 'IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (es) {
+      if (es.some(function (e) { return e.isIntersecting; })) { io.disconnect(); window.__ignite(1); }
+    }, { threshold: 0.25 });
+    io.observe(order);
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.offer-cta, #sendCodeBtn'), function (el) {
+    el.addEventListener('click', function () { window.__ignite(0.6); });
+  });
 })();
 </script>
 <script>
