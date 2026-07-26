@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>FlameLink — make your car breathe fire | CM Performance</title>
 <meta name="description" content="FlameLink — fully standalone, zero engine mods. Real flames out your exhaust on every lift-off. No ECU flash, no risk to your motor." />
+<link rel="canonical" href="https://cm-perf.github.io/flink/" />
 
 <!-- Open Graph / social previews (og-image.png is generated, 1200×630) -->
 <meta property="og:type" content="website" />
@@ -23,6 +24,28 @@
 <meta name="theme-color" content="#000000" />
 <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 <link rel="apple-touch-icon" href="favicon.svg" />
+
+<!-- Structured data: helps Google understand this FlameLink is a car product,
+     distinct from the software CMS that owns the bare-name SERP. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "FlameLink Exhaust Flame Kit",
+  "brand": { "@type": "Brand", "name": "CM Performance" },
+  "description": "Standalone bolt-on exhaust flame kit for cars. Real flames on every lift-off — no ECU flash, no tune, no engine mods, fully reversible. Tuned from your phone.",
+  "image": "https://cm-perf.github.io/flink/og-image.png",
+  "url": "https://cm-perf.github.io/flink/",
+  "category": "Vehicle Exhaust Accessories",
+  "offers": {
+    "@type": "Offer",
+    "price": "650",
+    "priceCurrency": "USD",
+    "availability": "https://schema.org/PreOrder",
+    "url": "https://cm-perf.github.io/flink/#order"
+  }
+}
+</script>
 
 <!-- Orders run through the Supabase form in #order (email-OTP verified). Keys are
       set in the module script at the bottom. -->
