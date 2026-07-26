@@ -207,6 +207,18 @@ document.addEventListener('DOMContentLoaded', function () {
     background: rgba(0,0,0,.45); border-radius: 999px; padding: 4px 10px;
   }
 
+  /* Buffering spinner — videos load on demand, and on mobile data (especially
+     in-app browsers) a clip can take seconds to start. Without this, a tap
+     appears to do nothing and people just keep tapping. */
+  .vid-spinner {
+    position: absolute; top: 50%; left: 50%; margin: -19px 0 0 -19px;
+    width: 38px; height: 38px; z-index: 2; pointer-events: none;
+    border: 3px solid rgba(255,255,255,.22); border-top-color: var(--flame);
+    border-radius: 50%; opacity: 0; transition: opacity .2s;
+  }
+  .vid-spinner.on { opacity: 1; animation: vspin .8s linear infinite; }
+  @keyframes vspin { to { transform: rotate(360deg); } }
+
   /* Mini sticky player */
   .hero-vid.mini {
     position: fixed; bottom: 24px; right: 20px; z-index: 98;
@@ -530,7 +542,7 @@ document.addEventListener('DOMContentLoaded', function () {
           <span class="sound-hint chaos-hint">🔊 tap for sound</span>
         </div>
         <div class="hero-vid" id="heroVid">
-          <video id="promoVid" preload="none" poster="promo/poster.jpg" playsinline loop>
+          <video id="promoVid" preload="metadata" poster="promo/poster.jpg" playsinline loop>
             <source src="promo/run_001_web.mp4" type="video/mp4">
           </video>
           <div class="promo-overlay" id="promoOverlay">
@@ -560,13 +572,13 @@ document.addEventListener('DOMContentLoaded', function () {
     </div>
     <div class="runs-grid" id="runsGrid">
       <div class="run-pod">
-        <video class="run-auto" preload="none" poster="promo/poster_002.jpg" playsinline loop muted>
+        <video class="run-auto" preload="metadata" poster="promo/poster_002.jpg" playsinline loop muted>
           <source src="promo/run_002_web.mp4" type="video/mp4">
         </video>
         <span class="sound-hint">🔊 tap for sound</span>
       </div>
       <div class="run-pod">
-        <video class="run-auto" preload="none" poster="promo/poster_003.jpg" playsinline loop muted>
+        <video class="run-auto" preload="metadata" poster="promo/poster_003.jpg" playsinline loop muted>
           <source src="promo/run_003_web.mp4" type="video/mp4">
         </video>
         <span class="sound-hint">🔊 tap for sound</span>
@@ -653,6 +665,11 @@ document.addEventListener('DOMContentLoaded', function () {
           <li>One fair price, tuned from your phone, flames on every lift</li>
         </ul>
       </div>
+    </div>
+    <!-- The section needs a next action — Clarity showed people tapping the
+         cards (dead clicks) with nowhere to go from here. -->
+    <div style="text-align:center;margin-top:30px;">
+      <a class="btn btn-flame" href="#order" onclick="trackEvent('why_cta_click')">Skip the tune — get FlameLink</a>
     </div>
   </div>
 </section>
@@ -866,6 +883,21 @@ document.addEventListener('DOMContentLoaded', function () {
 /* Hero: flame chaos on desktop/tablet (all three autoplay muted), classic
    tap-to-load single video on mobile. */
 var CHAOS_MODE = window.matchMedia('(min-width: 861px)').matches;
+
+/* Every video pod gets a buffering spinner: visible whenever the clip is
+   trying to play but has no frames yet (slow mobile data, in-app browsers).
+   Clarity showed users rage-tapping clips that were silently loading. */
+(function () {
+  document.querySelectorAll('.hero-vid video, .run-pod video').forEach(function (v) {
+    var sp = document.createElement('div');
+    sp.className = 'vid-spinner';
+    v.parentElement.appendChild(sp);
+    function show() { if (!v.paused) sp.classList.add('on'); }
+    function hide() { sp.classList.remove('on'); }
+    ['loadstart', 'waiting', 'stalled', 'seeking'].forEach(function (ev) { v.addEventListener(ev, show); });
+    ['playing', 'canplay', 'pause', 'error'].forEach(function (ev) { v.addEventListener(ev, hide); });
+  });
+})();
 (function () {
   var overlay = document.getElementById('promoOverlay');
   var vid = document.getElementById('promoVid');
@@ -897,7 +929,9 @@ var CHAOS_MODE = window.matchMedia('(min-width: 861px)').matches;
 
   overlay.addEventListener('click', function () {
     overlay.classList.add('hidden');
-    vid.play();
+    // play() can reject (in-app browsers, power-saver mode) — bring the
+    // overlay back instead of leaving a dead poster + an uncaught error.
+    vid.play().catch(function () { overlay.classList.remove('hidden'); });
     window.trackEvent('video_hero_play');
   });
   vid.addEventListener('ended', function () {
@@ -923,8 +957,16 @@ var CHAOS_MODE = window.matchMedia('(min-width: 861px)').matches;
 
   vids.forEach(function (vid) {
     vid.addEventListener('click', function () {
-      vid.muted = !vid.muted;
-      if (!vid.muted) { vid.play().catch(function () {}); window.trackEvent('run_video_unmuted'); }
+      // Not started yet (still buffering / autoplay blocked): the tap means
+      // "play this" — start it with sound, don't flip mute on a black frame.
+      if (vid.paused || vid.readyState < 2) {
+        vid.muted = false;
+        vid.play().catch(function () {});
+        window.trackEvent('run_video_unmuted');
+      } else {
+        vid.muted = !vid.muted;
+        if (!vid.muted) { vid.play().catch(function () {}); window.trackEvent('run_video_unmuted'); }
+      }
       var hint = vid.parentElement.querySelector('.sound-hint');
       if (hint) hint.textContent = vid.muted ? '🔊 tap for sound' : '🔇 tap to mute';
     });
@@ -964,6 +1006,26 @@ var CHAOS_MODE = window.matchMedia('(min-width: 861px)').matches;
       pod.classList.remove('mini');
       pod.style.cssText = '';
     }, 220);
+  });
+})();
+
+/* Safety net: the whole order flow lives in the ES module below (Supabase via
+   esm.sh). If that import fails — flaky network, in-app browser blocking it —
+   the form would fall back to a native GET submit: page reloads, everything
+   the customer typed is gone, no error shown. Catch that here (the module
+   sets __orderReady once its handlers are attached). */
+(function () {
+  var f = document.getElementById('orderForm');
+  if (!f) return;
+  f.addEventListener('submit', function (e) {
+    if (window.__orderReady) return;
+    e.preventDefault();
+    var s = document.getElementById('orderStatus');
+    if (s) {
+      s.textContent = "The order system couldn't load — check your connection and try again, or email cmperformancegh@gmail.com and we'll sort you out.";
+      s.className = 'form-status err';
+    }
+    window.trackEvent('order_module_missing');
   });
 })();
 </script>
@@ -1011,6 +1073,14 @@ const otpCode = document.getElementById('otpCode');
 const otpDest = document.getElementById('otpDest');
 
 const configured = !SUPABASE_URL.includes('PASTE_') && !SUPABASE_ANON_KEY.includes('PASTE_');
+
+// In-app browsers (Snapchat, Instagram…) can run with storage disabled, where
+// merely touching sessionStorage THROWS and would kill this whole module —
+// i.e. the order form. Never access it raw.
+const store = {
+  get(k) { try { return sessionStorage.getItem(k); } catch (_) { return null; } },
+  set(k, v) { try { sessionStorage.setItem(k, v); } catch (_) {} },
+};
 // One-shot order form: we only need the session long enough to verify the email
 // and insert the row. Don't persist it (no lingering auth/refresh loop on every
 // visitor who ever ordered). The in-memory session from verifyOtp still authorizes
@@ -1019,8 +1089,8 @@ const configured = !SUPABASE_URL.includes('PASTE_') && !SUPABASE_ANON_KEY.includ
 // API activity, which would silently kill the order form. Every visit fires
 // one tiny REST request (once per browser session). The scheduled GitHub
 // Action in .github/workflows/supabase-keepalive.yml covers visitor-free weeks.
-if (configured && !sessionStorage.getItem('supaPinged')) {
-  sessionStorage.setItem('supaPinged', '1');
+if (configured && !store.get('supaPinged')) {
+  store.set('supaPinged', '1');
   fetch(SUPABASE_URL + '/auth/v1/health', { headers: { apikey: SUPABASE_ANON_KEY } })
     .catch(() => {}); // fire-and-forget; a failed ping must never affect the page
 }
@@ -1062,7 +1132,7 @@ const hostMatches = (host, list) => list.some(h => host === h || host.endsWith('
 async function classifyEmailDomain(email) {
   const domain = email.split('@')[1].toLowerCase();
   if (KNOWN_GOOD_DOMAINS.has(domain)) return 'ok';
-  const cached = sessionStorage.getItem('mxc:' + domain);
+  const cached = store.get('mxc:' + domain);
   if (cached) return cached;
   let verdict = 'ok'; // fail open
   try {
@@ -1086,7 +1156,7 @@ async function classifyEmailDomain(email) {
         if (!(a.Answer || []).some(rec => rec.type === 1)) verdict = 'dead';
       }
     }
-    sessionStorage.setItem('mxc:' + domain, verdict);
+    store.set('mxc:' + domain, verdict);
   } catch (_) { /* network/DoH blocked — let it through */ }
   return verdict;
 }
@@ -1298,6 +1368,9 @@ document.getElementById('backHomeBtn')?.addEventListener('click', () => {
   // (also correct locally and under any future custom domain).
   location.href = './';
 });
+
+// Handlers attached — tell the non-module safety net the form is live.
+window.__orderReady = true;
 </script>
 
 <!-- Save a comparison card as a clean PNG for socials (html2canvas, lazy-loaded on first click) -->
