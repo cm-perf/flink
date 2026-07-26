@@ -29,8 +29,15 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet" />
-<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<!-- Fonts load async (print-media swap): text paints immediately in the system
+     font instead of blocking first render ~1s on mobile. -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+<noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet" /></noscript>
+<!-- The hero poster is the mobile LCP image — fetch it eagerly. -->
+<link rel="preload" as="image" href="promo/poster.jpg" fetchpriority="high" />
+<!-- Turnstile is NOT loaded here: ~300 KB of challenge scripts only needed at
+     checkout. The order module lazy-loads it when #order approaches. -->
 <script>
 /* ── Analytics: Microsoft Clarity (free, unlimited) ──────────────────────────
    Recordings + scroll heatmaps + the custom events fired around the page
@@ -74,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function () {
     --elevated: #161616;
     --text: #ffffff;
     --dim: #888888;
-    --muted: #3d3d3d;
+    --muted: #7d7d7d; /* ≥4.5:1 on both #000 and #0c0c0c (WCAG AA small text) */
     --border: #1c1c1c;
     --border-hi: #2e2e2e;
     --flame: #e85d04;
@@ -300,7 +307,7 @@ document.addEventListener('DOMContentLoaded', function () {
     background: var(--surface); border: 1px solid var(--border-hi); color: var(--dim);
   }
   .step-item.active .step-num { background: var(--flame); color: #000; border-color: var(--flame); }
-  .step-item h4 { font-size: 11px; font-weight: 600; margin-bottom: 4px; }
+  .step-item h3 { font-size: 11px; font-weight: 600; margin-bottom: 4px; }
   .step-item p { font-size: 10px; color: var(--dim); line-height: 1.4; }
   .step-arrow { color: var(--muted); font-size: 18px; align-self: center; padding-top: 6px; flex-shrink: 0; }
   @media (max-width: 640px) { .steps-bar { flex-wrap: wrap; gap: 16px; } .step-arrow { display: none; } }
@@ -312,8 +319,10 @@ document.addEventListener('DOMContentLoaded', function () {
   .badge { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 5px 11px; border-radius: 999px; margin-bottom: 12px; }
   .badge.now { background: rgba(232,93,4,.16); color: var(--flame); }
   .badge.req { border: 1px solid var(--border-hi); color: var(--dim); }
-  .order-card.req-card { background: var(--bg); border-color: var(--border); opacity: .85; }
-  .order-card.req-card .price { opacity: .5; }
+  /* Dim the custom-build card via color, not opacity — a blanket opacity
+     dragged the badge/fine print below WCAG contrast. */
+  .order-card.req-card { background: var(--bg); border-color: var(--border); }
+  .order-card.req-card .price { color: var(--dim); }
   #reserve { scroll-margin-top: 24px; }
   @media (max-width: 720px) { .offers { grid-template-columns: 1fr; } }
 
@@ -515,7 +524,7 @@ document.addEventListener('DOMContentLoaded', function () {
   </linearGradient>
 </defs></svg>
 
-<div id="mainContent">
+<main id="mainContent">
 
 <a id="top"></a>
 
@@ -704,25 +713,25 @@ document.addEventListener('DOMContentLoaded', function () {
     <div class="steps-bar">
       <div class="step-item active">
         <div class="step-num">1</div>
-        <h4>Place order</h4>
+        <h3>Place order</h3>
         <p>Pick your build and verify your email.</p>
       </div>
       <span class="step-arrow">→</span>
       <div class="step-item">
         <div class="step-num">2</div>
-        <h4>We reach out</h4>
+        <h3>We reach out</h3>
         <p>Confirm your build, answer questions, and give you a timeline.</p>
       </div>
       <span class="step-arrow">→</span>
       <div class="step-item">
         <div class="step-num">3</div>
-        <h4>Build &amp; ship</h4>
+        <h3>Build &amp; ship</h3>
         <p>Your kit is built in the next batch, then shipped or installed.</p>
       </div>
       <span class="step-arrow">→</span>
       <div class="step-item">
         <div class="step-num">4</div>
-        <h4>Enjoy</h4>
+        <h3>Enjoy</h3>
         <p>Flames on every lift-off. All show, no risk.</p>
       </div>
     </div>
@@ -811,7 +820,7 @@ document.addEventListener('DOMContentLoaded', function () {
   </div>
 </footer>
 
-</div><!-- /mainContent -->
+</main><!-- /mainContent -->
 
 <!-- Full-page thank you screen (shown after successful order) -->
 <div id="thankyou" hidden>
@@ -881,7 +890,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
   window.addEventListener('resize', init);
   init();
-  if (reduce) draw(); else loop();
+  draw(); // static first frame — free to paint
+  // Animation waits for the load event: no rAF churn competing with the
+  // critical render path on throttled mobile CPUs.
+  if (!reduce) {
+    if (document.readyState === 'complete') requestAnimationFrame(loop);
+    else window.addEventListener('load', function () { requestAnimationFrame(loop); });
+  }
 })();
 </script>
 <script>
@@ -999,7 +1014,14 @@ var CHAOS_MODE = window.matchMedia('(min-width: 861px)').matches;
     setMini(hero.getBoundingClientRect().bottom < 0);
   }
 
-  window.addEventListener('scroll', update, { passive: true });
+  // rAF-throttled: getBoundingClientRect on every scroll event forces
+  // layout (flagged by Lighthouse as forced reflow).
+  var ticking = false;
+  window.addEventListener('scroll', function () {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () { ticking = false; update(); });
+  }, { passive: true });
 
   closeBtn.addEventListener('click', function () {
     dismissed = true;
@@ -1063,9 +1085,7 @@ var CHAOS_MODE = window.matchMedia('(min-width: 861px)').matches;
        (or paste the SQL in the dashboard SQL editor).
     4. The publishable key below is safe to ship — RLS protects the table.
 */
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-
-const SUPABASE_URL = 'https://jmdqqgftsfmavwnbqitx.supabase.co';       
+const SUPABASE_URL = 'https://jmdqqgftsfmavwnbqitx.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_HYkDj6F6n6byI8l76vh-VQ_s2hGFfFS';
 
 const form = document.getElementById('orderForm');
@@ -1100,11 +1120,56 @@ if (configured && !store.get('supaPinged')) {
     .catch(() => {}); // fire-and-forget; a failed ping must never affect the page
 }
 
-const supabase = configured
-  ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-      auth: { persistSession: false, autoRefreshToken: false },
-    })
-  : null;
+// Supabase (~100 KB via esm.sh) and Turnstile (~300 KB of challenge scripts)
+// are checkout-only — lazy-loaded when the visitor nears #order (prefetch
+// observer below) or on first submit, instead of taxing every page load.
+let supaPromise = null;
+function getSupabase() {
+  if (!configured) return Promise.resolve(null);
+  if (!supaPromise) {
+    supaPromise = import('https://esm.sh/@supabase/supabase-js@2')
+      .then((m) => m.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+        auth: { persistSession: false, autoRefreshToken: false },
+      }))
+      .catch(() => { supaPromise = null; return null; }); // retry on next call
+  }
+  return supaPromise;
+}
+
+let tsPromise = null;
+function loadTurnstile() {
+  if (window.turnstile) return Promise.resolve(true);
+  if (!tsPromise) {
+    tsPromise = new Promise((resolve) => {
+      const s = document.createElement('script');
+      s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+      s.async = true;
+      s.onload = () => { try { window.turnstile.ready(() => resolve(true)); } catch (_) { resolve(true); } };
+      s.onerror = () => { tsPromise = null; resolve(false); };
+      document.head.appendChild(s);
+    });
+  }
+  return tsPromise;
+}
+
+// Warm both the moment the order section approaches the viewport, so the
+// checkout feels instant without the homepage paying for it.
+{
+  const orderSec = document.getElementById('order');
+  if (orderSec && 'IntersectionObserver' in window) {
+    const warm = new IntersectionObserver((entries) => {
+      if (entries.some((e) => e.isIntersecting)) {
+        warm.disconnect();
+        getSupabase();
+        loadTurnstile();
+      }
+    }, { rootMargin: '800px' });
+    warm.observe(orderSec);
+  } else {
+    getSupabase(); loadTurnstile();
+  }
+}
+
 let pending = null; // the order, held until the email is verified
 
 // ── Email-domain sanity (kills OTP bounce spam) ─────────────────────────────
@@ -1207,11 +1272,15 @@ function cooldownBtn(seconds) {
 
 async function verifyTurnstile() {
   setStatus('Security check…');
-  turnstile?.reset();
-  turnstile?.execute();
+  if (!(await loadTurnstile())) {
+    setStatus('Security check unavailable — check your connection and try again.', 'err');
+    return false;
+  }
+  try { window.turnstile.reset(); window.turnstile.execute(); } catch (_) {}
   const token = await new Promise((resolve) => {
     const check = setInterval(() => {
-      const t = turnstile?.getResponse();
+      let t = null;
+      try { t = window.turnstile.getResponse(); } catch (_) {}
       if (t) { clearInterval(check); resolve(t); }
     }, 200);
     setTimeout(() => { clearInterval(check); resolve(null); }, 15000);
@@ -1256,12 +1325,9 @@ if (!configured) {
   if (sendBtn) sendBtn.disabled = true;
 }
 
-// Reset Turnstile widget on page load
-window.addEventListener('load', () => { try { turnstile?.reset(); } catch (_) {} });
-
 form?.addEventListener('submit', async (e) => {
   e.preventDefault();
-  if (!supabase) return;
+  if (!configured) return;
 
   const d = new FormData(form);
   const name = stripHtml((d.get('name') || '').toString().trim());
@@ -1314,8 +1380,14 @@ form?.addEventListener('submit', async (e) => {
 
   // Security check 1: CAPTCHA
   const captchaOk = await verifyTurnstile();
-  try { turnstile?.reset(); } catch (_) {}
+  try { window.turnstile?.reset(); } catch (_) {}
   if (!captchaOk) return;
+
+  const supabase = await getSupabase();
+  if (!supabase) {
+    setStatus("Couldn't reach the order service — check your connection and try again.", 'err');
+    return;
+  }
 
   pending = { name, email, phone, model, note, install, kind };
   sendBtn.disabled = true;
@@ -1335,7 +1407,9 @@ form?.addEventListener('submit', async (e) => {
 });
 
 verifyBtn?.addEventListener('click', async () => {
-  if (!supabase || !pending) return;
+  if (!pending) return;
+  const supabase = await getSupabase(); // cached — the OTP send already loaded it
+  if (!supabase) { setStatus("Couldn't reach the order service — try again.", 'err'); return; }
   const token = otpCode.value.trim();
   if (!/^\d{4,8}$/.test(token)) { setStatus('Enter the code we emailed you.', 'err'); return; }
   verifyBtn.disabled = true;
@@ -1364,7 +1438,7 @@ resendBtn?.addEventListener('click', () => {
   form.hidden = false;
   otpCode.value = '';
   setStatus('');
-  try { turnstile?.reset(); } catch (_) {}
+  try { window.turnstile?.reset(); } catch (_) {}
 });
 
 document.getElementById('backHomeBtn')?.addEventListener('click', () => {
