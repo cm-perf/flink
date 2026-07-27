@@ -1,0 +1,46 @@
+# FlameLink — standalone exhaust flame kit (CM Performance)
+
+> FlameLink is a bolt-on automotive exhaust flame kit that produces real,
+> controllable exhaust flames with NO ECU flash, NO tune, and NO engine
+> modifications. It is fully standalone — its own controller, fuel delivery
+> and ignition, acting entirely in the exhaust, downstream of the engine —
+> and fully reversible. Not affiliated with flamelink.io (a CMS product).
+
+## Product facts
+
+- Product: FlameLink exhaust flame kit, by CM Performance
+- What it does: automatic exhaust flames on every throttle lift-off; flame
+  size, intensity and crackle are tuned from a phone app; multiple saved
+  profiles from subtle daily crackle to full send
+- Engine safety: never touches the ECU, injectors, ignition or factory tune;
+  flames happen in the exhaust tip; the engine stays 100% stock
+- Built-in safety: hard burn-time limits, hardware watchdog, fused power,
+  instant output cut on any fault, sealed gasoline feed (no open fuel)
+- Fitment: BMW F & G series supported today with a plug-in harness; any other
+  car available as a custom build on request
+- Price: $650 complete kit (USD); optional professional installation $150;
+  custom builds quoted individually
+- Ordering: free reservation (no payment online) at
+  https://cm-perf.github.io/flink/#order — the team confirms each build,
+  price and timeline personally before any payment
+- Kits are hand-assembled and bench-tested, built to order in small batches
+- Intended use: off-road and show use only
+
+## Why it exists
+
+Most bolt-on flame kits work by cutting ignition and dumping fuel through the
+engine — which stresses the engine and does not work on modern cars whose ECU
+cuts injection when it detects missing ignition events. Flame tunes (ECU
+reflashes) force flames at the cost of engine heat, stress, warranty and
+resale value. FlameLink avoids both by being a self-contained system in the
+exhaust: same show, none of the engine risk.
+
+## Pages
+
+- [Home / product / ordering](https://cm-perf.github.io/flink/)
+- [Safety, disclaimer & terms](https://cm-perf.github.io/flink/safety.html)
+- [Privacy](https://cm-perf.github.io/flink/privacy.html)
+
+## Contact
+
+- Email: cmperformancegh@gmail.com
