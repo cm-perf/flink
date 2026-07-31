@@ -1565,6 +1565,114 @@ document.addEventListener('DOMContentLoaded', function () {
       scroll-margin-top: 52px;
     }
   }
+
+  /* ── Order section: one viewport, Apple buy-flow density (desktop) ──────
+     The whole "Build your FlameLink" step — heading, configurator, fine
+     print — fits a laptop screen with no scrolling. Type and spacing scale
+     with viewport height (vh clamps) so short displays compress gracefully. */
+  @media (min-width: 901px) {
+    #order {
+      box-sizing: border-box; min-height: 100svh;
+      display: flex; flex-direction: column; justify-content: center;
+      padding-top: clamp(62px, 8vh, 84px);   /* clears the fixed nav */
+      padding-bottom: clamp(14px, 3vh, 32px);
+      /* the padding above already clears the nav — an extra anchor offset
+         would push the section's bottom off-screen */
+      scroll-margin-top: 0;
+    }
+    #order .sec-label { margin-bottom: clamp(10px, 2vh, 18px); }
+    #order .sec-label h2 { font-size: clamp(30px, 4.8vh, 46px); }
+    #order .sec-label p { margin-top: 8px; font-size: 14px; max-width: 620px; }
+    .build-configurator { min-height: 0; }
+    .build-stage { min-height: 0; }
+    /* The stage photo must not drive the row height — its portrait intrinsic
+       size was stretching the whole configurator past 1000px. Absolute fill:
+       the options panel now defines the height, the photo covers whatever
+       stage that leaves. */
+    .build-stage img { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .build-panel { padding: clamp(20px, 3.4vh, 30px) 34px; min-height: 0; }
+    .build-progress { margin-bottom: clamp(10px, 1.8vh, 16px); }
+    .build-step-kicker { margin-bottom: 5px; }
+    .build-panel h3 { font-size: clamp(19px, 2.8vh, 24px); margin-bottom: 5px; }
+    .build-intro { margin-bottom: clamp(8px, 1.6vh, 14px); }
+    .build-choices { gap: 8px; }
+    .build-choice-body {
+      min-height: 0; padding: clamp(9px, 1.6vh, 13px) 16px;
+      border-radius: 14px;
+    }
+    .choice-copy strong { font-size: 14px; margin-bottom: 3px; }
+    .choice-copy span { font-size: 11.5px; }
+    .build-substep { margin-top: clamp(8px, 1.6vh, 14px); }
+    .build-substep-title { margin-bottom: 6px; }
+    .install-options { padding: 4px; }
+    .install-choice span { min-height: 40px; padding: 6px 10px; }
+    .build-summary { padding-top: clamp(8px, 1.6vh, 14px); }
+    .build-summary-card { padding: 11px 15px; border-radius: 14px; }
+    .build-total { font-size: 20px; }
+    .build-continue { margin-top: 7px; padding: 11px 18px; }
+    .build-no-pay { margin-top: 6px; }
+    /* Step 2 (reserve drawer) must fit the same envelope */
+    .reserve-back { margin-bottom: 14px; }
+    .reserve-summary { margin-top: 12px; padding: 10px 0; }
+    #order .order-form { gap: 8px; margin-top: 14px; }
+    #order .order-form input[type=text], #order .order-form input[type=tel],
+    #order .order-form input[type=email], #order #otpStep input { padding: 10px 12px; }
+    #order .order-form textarea { min-height: 52px; }
+    #order .order-form .btn { padding: 12px; }
+    /* Aftercare collapses from a boxed strip to one quiet caption row */
+    #order .build-aftercare {
+      display: flex; justify-content: center; gap: 36px;
+      margin-top: clamp(10px, 1.8vh, 16px);
+      border: 0; border-radius: 0; background: none; overflow: visible;
+    }
+    #order .build-aftercare div {
+      display: flex; gap: 6px; align-items: baseline;
+      padding: 0; background: none;
+    }
+    #order .build-aftercare strong { margin-bottom: 0; }
+  }
+
+  /* Short laptop screens (e.g. 1080p at 125% scaling): trim the non-essentials
+     so the configurator still lands on one screen. */
+  @media (min-width: 901px) and (max-height: 800px) {
+    #order { padding-top: 62px; padding-bottom: 16px; }
+    #order .sec-label { margin-bottom: 12px; }
+    #order .sec-label h2 { font-size: 30px; }
+    #order .sec-label p { display: none; }   /* the panel intro carries it */
+    .build-panel { padding: 16px 30px; }
+    .build-progress { margin-bottom: 12px; }
+    .build-panel h3 { font-size: 19px; }
+    .build-intro { margin-bottom: 10px; }
+    .build-choice-body { padding: 8px 14px; }
+    .build-substep { margin-top: 8px; }
+    .install-choice span { min-height: 38px; }
+    .build-summary { padding-top: 10px; }
+    .build-summary-card { padding: 10px 14px; }
+    .build-continue { margin-top: 7px; padding: 11px 16px; }
+    .build-no-pay { margin-top: 6px; }
+    #order .build-aftercare { margin-top: 10px; }
+    #order .build-aftercare span { display: none; } /* keep the three bold facts */
+    /* Reserve drawer: same envelope, tighter form */
+    .reserve-back { margin-bottom: 10px; }
+    .reserve-drawer .build-intro { display: none; } /* the summary row carries it */
+    .reserve-summary { margin-top: 8px; padding: 8px 0; }
+    #order .order-form { gap: 7px; margin-top: 10px; }
+    #order .order-form input[type=text], #order .order-form input[type=tel],
+    #order .order-form input[type=email], #order #otpStep input { padding: 8px 12px; }
+    #order .order-form textarea { min-height: 40px; }
+    #order .order-form .btn { padding: 10px; }
+  }
+
+  /* Very short screens (~11" laptops, small browser windows): drop the
+     garnish, keep the buy flow. */
+  @media (min-width: 901px) and (max-height: 690px) {
+    #order { padding-top: 58px; padding-bottom: 12px; }
+    #order .sec-label { margin-bottom: 8px; }
+    #order .sec-label h2 { font-size: 26px; }
+    .build-step-kicker { display: none; }
+    .build-panel { padding: 12px 28px; }
+    #order .build-aftercare { display: none; }
+  }
 </style>
 </head>
 <body>
@@ -1813,7 +1921,7 @@ document.addEventListener('DOMContentLoaded', function () {
     <div class="sec-label">
       <span class="label">Configured for your car</span>
       <h2>Build your FlameLink.</h2>
-      <p>Choose your model and how you want it fitted. Reserving is free — we confirm compatibility, price and timing before you pay.</p>
+      <p>Reserving is free — we confirm your build and price before you pay.</p>
     </div>
 
     <div class="build-configurator">
@@ -1839,16 +1947,15 @@ document.addEventListener('DOMContentLoaded', function () {
         <div class="build-config-step" id="buildConfigStep">
           <span class="build-step-kicker">Choose your model</span>
           <h3>Which FlameLink is yours?</h3>
-          <p class="build-intro">Same flames, same safeguards, same app. Choose how you want to fire them.</p>
+          <p class="build-intro">Same flames, same app — choose your trigger.</p>
 
           <div class="build-choices">
             <label class="build-choice">
               <input type="radio" name="buildChoice" value="FlameLink Pro — BMW F &amp; G series" data-mode="pro" checked />
               <span class="build-choice-body">
                 <span class="choice-copy">
-                  <span class="choice-recommended">BMW F &amp; G Series</span>
-                  <strong>FlameLink Pro</strong>
-                  <span>Plugs into the car. Flames fire themselves on every lift-off and downshift.</span>
+                  <strong>FlameLink Pro · BMW F &amp; G</strong>
+                  <span>Plugs in. Flames on every lift-off, automatically.</span>
                 </span>
                 <span class="choice-price"><small>Complete kit</small>$650</span>
               </span>
@@ -1857,9 +1964,8 @@ document.addEventListener('DOMContentLoaded', function () {
               <input type="radio" name="buildChoice" value="FlameLink — universal (flame button)" data-mode="std" />
               <span class="build-choice-body">
                 <span class="choice-copy">
-                  <span class="choice-recommended">Fits any car</span>
-                  <strong>FlameLink</strong>
-                  <span>Universal kit with a flame button on your dash. You press, it breathes fire.</span>
+                  <strong>FlameLink · Any car</strong>
+                  <span>Flame button on your dash. You call the fire.</span>
                 </span>
                 <span class="choice-price"><small>Complete kit</small>$499</span>
               </span>
