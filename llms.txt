@@ -11,7 +11,7 @@
 - Product line: two models, by CM Performance —
   1. FlameLink ($499): universal, fits any 12V car; flames fire from a
      momentary flame button mounted on the dash — the driver triggers them
-  2. FlameLink Pro ($650): engineered for BMW F & G series; a plug-in
+  2. FlameLink Pro ($650): engineered for BMW F & G Series; a plug-in
      vehicle-specific harness reads the car and fires flames automatically
      on every throttle lift-off and downshift — no button needed
 - Both models: flame size, intensity and crackle are tuned from a phone app;
@@ -21,7 +21,7 @@
 - Built-in safety: hard burn-time limits, hardware watchdog, fused power,
   instant output cut on any fault, sealed gasoline feed (no open fuel)
 - Fitment: FlameLink fits any car (it lives on the exhaust, not the engine);
-  FlameLink Pro fits BMW F & G series with a plug-in harness
+  FlameLink Pro fits BMW F & G Series with a plug-in harness
 - Price: FlameLink $499, FlameLink Pro $650 (USD, complete kits); optional
   professional installation $150 on either model
 - Ordering: free reservation (no payment online) at
