@@ -8,18 +8,22 @@
 
 ## Product facts
 
-- Product: FlameLink exhaust flame kit, by CM Performance
-- What it does: automatic exhaust flames on every throttle lift-off; flame
-  size, intensity and crackle are tuned from a phone app; multiple saved
-  profiles from subtle daily crackle to full send
+- Product line: two models, by CM Performance —
+  1. FlameLink ($499): universal, fits any 12V car; flames fire from a
+     momentary flame button mounted on the dash — the driver triggers them
+  2. FlameLink Pro ($650): engineered for BMW F & G series; a plug-in
+     vehicle-specific harness reads the car and fires flames automatically
+     on every throttle lift-off and downshift — no button needed
+- Both models: flame size, intensity and crackle are tuned from a phone app;
+  multiple saved profiles from subtle daily crackle to full send
 - Engine safety: never touches the ECU, injectors, ignition or factory tune;
   flames happen in the exhaust tip; the engine stays 100% stock
 - Built-in safety: hard burn-time limits, hardware watchdog, fused power,
   instant output cut on any fault, sealed gasoline feed (no open fuel)
-- Fitment: BMW F & G series supported today with a plug-in harness; any other
-  car available as a custom build on request
-- Price: $650 complete kit (USD); optional professional installation $150;
-  custom builds quoted individually
+- Fitment: FlameLink fits any car (it lives on the exhaust, not the engine);
+  FlameLink Pro fits BMW F & G series with a plug-in harness
+- Price: FlameLink $499, FlameLink Pro $650 (USD, complete kits); optional
+  professional installation $150 on either model
 - Ordering: free reservation (no payment online) at
   https://cm-perf.github.io/flink/#order — the team confirms each build,
   price and timeline personally before any payment
