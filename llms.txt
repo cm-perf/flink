@@ -16,12 +16,13 @@
      on every throttle lift-off and downshift — no button needed
 - Both models: flame size, intensity and crackle are tuned from a phone app;
   multiple saved profiles from subtle daily crackle to full send
-- Engine safety: never touches the ECU, injectors, ignition or factory tune;
-  flames happen in the exhaust tip; the engine stays 100% stock
+- Engine separation: never reflashes, controls or changes the factory ECU
+  calibration; flames happen downstream in the exhaust. FlameLink Pro reads
+  vehicle signals only to trigger the standalone flame system
 - Built-in safety: hard burn-time limits, hardware watchdog, fused power,
   instant output cut on any fault, sealed gasoline feed (no open fuel)
-- Fitment: FlameLink fits any car (it lives on the exhaust, not the engine);
-  FlameLink Pro fits BMW F & G Series with a plug-in harness
+- Fitment: FlameLink is designed for 12V cars, with exact fitment confirmed
+  before payment; FlameLink Pro fits BMW F & G Series with a plug-in harness
 - Price: FlameLink $499, FlameLink Pro $650 (USD, complete kits); optional
   professional installation $150 on either model
 - Ordering: free reservation (no payment online) at
@@ -37,7 +38,7 @@ engine — which stresses the engine and does not work on modern cars whose ECU
 cuts injection when it detects missing ignition events. Flame tunes (ECU
 reflashes) force flames at the cost of engine heat, stress, warranty and
 resale value. FlameLink avoids both by being a self-contained system in the
-exhaust: same show, none of the engine risk.
+exhaust: the same show without using the engine to create the effect.
 
 ## Pages
 
