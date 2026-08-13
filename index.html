@@ -86,6 +86,21 @@
     },
     {
       "@type": "Question",
+      "name": "How does FlameLink know when it's safe to fire?",
+      "acceptedAnswer": { "@type": "Answer", "text": "It depends on the model. FlameLink Pro reads live vehicle data — RPM, gear, vehicle speed, engine and coolant temperature, and battery voltage — over the CAN bus to gate flame operation, firing automatically on lift-off and downshift. On FlameLink the button fires it, so you are responsible for when it flames, but either way the flames need exhaust gas to be driven, so you have to be on the throttle." }
+    },
+    {
+      "@type": "Question",
+      "name": "Should I use FlameLink in short bursts?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes — use short bursts with breaks in between. Heat builds with every repeated operation, and back-to-back running can build serious heat in the exhaust tip and surrounding panels, enough to potentially damage paint or anything near the flame. Burst, let it cool, burst again." }
+    },
+    {
+      "@type": "Question",
+      "name": "Will FlameLink affect my catalytic converter or exhaust?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. The flames happen at the tail end of the car or motorbike, well behind the catalytic converters and other exhaust components. Installation only modifies the far rear end of the exhaust to mount the kit, so everything upstream stays untouched." }
+    },
+    {
+      "@type": "Question",
       "name": "Which cars does FlameLink fit?",
       "acceptedAnswer": { "@type": "Answer", "text": "FlameLink is designed for 12V cars and is not tied to one engine platform. The standard kit fires from a dash-mounted flame button. BMW F and G Series get FlameLink Pro, which reads vehicle signals through a plug-in harness and fires automatically on lift-off. Exact fitment is confirmed before payment." }
     },
@@ -1777,7 +1792,7 @@ document.addEventListener('DOMContentLoaded', function () {
     <div class="system-grid">
       <div class="system-copy">
         <span class="label">Designed as a complete system</span>
-        <h2>The drama stays outside.<br><span class="system-accent">Your engine stays factory.</span></h2>
+        <h2>The drama stays outside.<br><span class="system-accent">Your ECU stays factory.</span></h2>
         <p>FlameLink creates the effect downstream in the exhaust with its own controller, fuel and spark. It never asks your engine to do something it was not designed to do.</p>
         <a class="text-link" href="#why" data-track="system_compare_click">Compare it with a flame tune <span>→</span></a>
       </div>
@@ -1899,6 +1914,18 @@ document.addEventListener('DOMContentLoaded', function () {
     <details>
       <summary>Will it flame on its own, or catch fire?</summary>
       <p>Only when you fire it — the flame button on FlameLink, a lift-off or downshift on FlameLink Pro, or the app. Parked with the engine off it's completely inert; there's no open flame sitting there waiting.</p>
+    </details>
+    <details>
+      <summary>How does FlameLink know when it's safe to fire?</summary>
+      <p>It depends on the model. <strong>FlameLink Pro</strong> reads live vehicle data — <strong>RPM, gear, vehicle speed, engine &amp; coolant temperature and battery voltage</strong> — over the CAN bus to gate flame operation, firing automatically on lift-off and downshift. On <strong>FlameLink</strong> the button fires it, so you're responsible for when it flames — but either way the flames need exhaust gas to be driven, so you've got to be on the throttle.</p>
+    </details>
+    <details>
+      <summary>Should I use it in short bursts, or can I hold it?</summary>
+      <p>Use short bursts with breaks in between. Heat builds with every repeated operation, so running it back-to-back can build serious heat in the exhaust tip and surrounding panels — enough to potentially damage paint or anything else near the flame. Burst, let it cool, burst again. Fire is fire.</p>
+    </details>
+    <details>
+      <summary>Will it affect my catalytic converter or exhaust?</summary>
+      <p>No. The flames happen at the tail end of the car or motorbike, well behind the catalytic converters and other exhaust components. Installation only modifies the far rear end of the exhaust to mount the kit, so everything upstream — cats, resonators, muffler — stays untouched.</p>
     </details>
     <details>
       <summary>Which cars does it fit?</summary>
